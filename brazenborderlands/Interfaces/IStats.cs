@@ -9,7 +9,7 @@ namespace brazenborderlands
         public int BrawnBase { get; set; }
         public int ReflexesBase { get; set; }
         public int EgoBase { get; set; }
-        public int HitpointBase { get; set; }
+        public int HealthBase { get; set; }
         public int Brawn();
         public int Reflexes();
         public int Ego();

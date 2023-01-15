@@ -54,8 +54,6 @@ namespace brazenborderlands
         public override string DrawingGlyph { get { return _drawingGlyph ?? DefaultMonsterTile(Kind); } set { _drawingGlyph = value; } }
         public override string DrawingColor { get { return _drawingColor ?? DefaultMonsterColor(Kind); } set { _drawingColor = value; } }
         public Monster() { }
-        //public Monster(int level) :this(1, new string[1] {""}) { }
-        //public Monster(int level, string[] modifiers) : this(1, 0, 0, MonsterKind.Gremlin, new string[1] { "" }) { }
         public Monster(int level, MonsterKind monsterKind, params MonsterAttribute[] monsterAttributes)
         {
             Name = Enum.GetName(typeof(MonsterKind), monsterKind);
@@ -68,24 +66,7 @@ namespace brazenborderlands
                 InitEquipment();
             }
             Modify(monsterAttributes);
-            Hitpoints = HitpointMax;
         }
-        //public Monster(int level, int xcurrent, int ycurrent, MonsterKind monsterKind, string[] modifiers) : base(xcurrent, ycurrent, DefaultMonsterTile(monsterKind), "green")
-        //{
-        //    Name = "Gremlin";
-        //    Level = level;
-        //    InitByLevelNorm(level);
-        //    JiggleAttributes();
-        //    foreach (string mod in modifiers)
-        //    {
-        //        if (mod == "small")
-        //        {
-        //            BrawnBase -= 3;
-        //            ReflexesBase += 2;
-        //        }
-        //    }
-        //    Hitpoints = HitpointMax;
-        //}
         public void Modify(params MonsterAttribute[] monsterAttributes)
         {
             foreach (MonsterAttribute attribute in monsterAttributes)
@@ -97,7 +78,7 @@ namespace brazenborderlands
                         ReflexesBase += 2;
                         break;
                     case MonsterAttribute.Minion:
-                        HitpointMax = HitpointMax / 2;
+                        HealthMax = HealthMax / 2;
                         break;
                 }
             }
@@ -113,6 +94,7 @@ namespace brazenborderlands
         }
         public override bool Act()
         {
+            if (IsStunned) { return true; }
             int dx = Math.Sign(Program.player.x - this.x);
             int dy = Math.Sign(Program.player.y - this.y);
             bool moved = Program.location.Move(this, dx, dy);

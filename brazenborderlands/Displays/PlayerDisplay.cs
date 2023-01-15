@@ -14,7 +14,7 @@ namespace brazenborderlands
             ColumnTabs = new List<int> { 0, 
                 (int)((float)EffectiveCellsWidth()*0.2),
                 (int)((float)EffectiveCellsWidth()*0.4),
-                (int)((float)EffectiveCellsWidth()*0.8)
+                (int)((float)EffectiveCellsWidth()*0.775)
             };
             RowTabs = new List<int> { 0,
                 (int)((float)EffectiveCellsHeight()*0.2),
@@ -35,7 +35,7 @@ namespace brazenborderlands
         {
             Contents[0, 0] = Program.player.Name;
             Contents[2, 0] = Program.player.Species + " " + Program.player.Class + " (lvl " + Program.player.Level.ToString() + ")";
-            Contents[3, 0] = "HP " + Program.player.Hitpoints.ToString() + " / " + Program.player.HitpointMax.ToString() + "   ";
+            Contents[3, 0] = "H: " + Program.player.Health + "   ";
             Contents[0, 1] = "Brawn";
             Contents[1, 1] = Program.player.Brawn().ToString();
             Contents[0, 2] = "Reflexes";

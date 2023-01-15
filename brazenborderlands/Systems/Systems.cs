@@ -32,6 +32,14 @@ namespace brazenborderlands
     }
     internal class Helpers
     {
+        public static int RollXSidedDice(int sides, int number)
+        {
+            return Dice.Roll(number.ToString() + "d" + sides.ToString());
+        }
+        public static int RollXSidedDie(int sides)
+        {
+            return RollXSidedDice(sides, 1);
+        }
         public static int PlusOrMinus(int value)
         {
             string range = (1 + 2 * value).ToString();
@@ -43,6 +51,19 @@ namespace brazenborderlands
             int x = Dice.Roll("1d" + v.Length + "-1");
             return (T)v.GetValue(x);
         }
+        public static int BoundsCheck(int value, int min, int max)
+        {
+            if (value > max || value < min)
+            {
+                throw new NotSupportedException("Attempt to set value " + value.ToString() +
+                    "outside supported range [" + min.ToString() + "," + max.ToString() + "].");
+            };
+            return value;
+        }
+        public static int BoundsCheck(int value)
+        {
+            return BoundsCheck(value, 1, 99);
+        }
     }
-
 }
+

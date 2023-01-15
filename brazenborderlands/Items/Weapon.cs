@@ -110,7 +110,7 @@ namespace brazenborderlands
             }
             else
             {
-                Program.logDisplay.AppendEntry(attacker.Name + " attacks ");
+                Program.logDisplay.AppendEntry(attacker.Name  + " attacks ");
             }
 
             int excesstohit = ToHitRoll(attacker, target, null);
@@ -120,7 +120,7 @@ namespace brazenborderlands
                 Program.logDisplay.WriteBufferAsEntry();
                 return;
             }
-            excesstohit = Math.Min(excesstohit - 8, 0);
+            excesstohit = Math.Max(excesstohit - 8, 0);
             int finaldamage = DamageRoll(attacker, target, excesstohit, null);
             if (finaldamage <= 0)
             {
@@ -128,13 +128,29 @@ namespace brazenborderlands
                 Program.logDisplay.WriteBufferAsEntry();
                 return;
             }
-            Program.logDisplay.AppendEntry("for " + finaldamage.ToString() + " damage.");
+            int woundpoints = Math.Max(0, Helpers.RollXSidedDie(finaldamage) - Helpers.RollXSidedDie(target.Soak()));
+            if (target.IsStunned) { woundpoints = finaldamage; }
+            int painpoints = finaldamage - woundpoints;
+            target.Painpoints += painpoints;
+            target.Woundpoints += woundpoints;
+            if (target.IsDead)
+            {
+                Program.logDisplay.AppendEntry("for " + finaldamage.ToString() + " damage, killing it.");
+            }
+            else if (target.IsStunned)
+            {
+                Program.logDisplay.AppendEntry("for " + finaldamage.ToString() + " damage. " + target.Name + " is stunned.");
+            }
+            else
+            {
+                Program.logDisplay.AppendEntry("for " + finaldamage.ToString() + " damage.");
+            }
             Program.logDisplay.WriteBufferAsEntry();
-            target.Hitpoints -= finaldamage;
         }
         protected virtual int ToHitRoll(Actor attacker, Actor defender, int? defense)
         {
             int def = defense ?? defender.Defense();
+            if (defender.IsStunned) { def = 0; }
             int result = Rules.OpposedRoll(Accuracy(attacker), def);
             return result;
         }

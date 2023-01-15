@@ -12,6 +12,8 @@ namespace brazenborderlands
         private int _brawn;
         private int _reflexes;
         private int _ego;
+        private int _woundpoints = 0;
+        private int _painpoints = 0;
 
         private int _level;
         private int _soakBase;
@@ -28,7 +30,7 @@ namespace brazenborderlands
                 _level = value;
             }
         }
-        public virtual int SoakBase { get => _soakBase; set { _soakBase = BoundsCheck(value); } }
+        public virtual int SoakBase { get => _soakBase; set { _soakBase = Helpers.BoundsCheck(value); } }
 
         public int x { get; set; }
         public int y { get; set; }
@@ -37,15 +39,24 @@ namespace brazenborderlands
         public bool IsWalkable { get => false; set { } }
         public bool IsTransparent { get => false; set { } }
         public string Name { get; set; }
-        public int BrawnBase { get => _brawn; set { _brawn = BoundsCheck(value); HitpointBase += (value - _brawn); } }
-        public int ReflexesBase { get => _reflexes; set { _reflexes = BoundsCheck(value); } }
-        public int EgoBase { get => _ego; set { _ego = BoundsCheck(value); } }
-        public int HitpointBase { get; set; }
-        public virtual int Hitpoints { get; set; }
-        public virtual int HitpointMax { get => HitpointBase + BrawnBase; set { HitpointBase += (value - BrawnBase); } }
-        public bool IsDead { get => (Hitpoints <= 0); set { } }
+        public int BrawnBase { get => _brawn; set { _brawn = Helpers.BoundsCheck(value); } }
+        public int ReflexesBase { get => _reflexes; set { _reflexes = Helpers.BoundsCheck(value); } }
+        public int EgoBase { get => _ego; set { _ego = Helpers.BoundsCheck(value); } }
+
+        // When uninjured, default max health equal to brawn plus base HP. When injured, accumulate wound points,
+        // and pain points. Pain goes away over time. If pain + wounds >= Max Health, cannot act.
+        // Wounds do not go away without some healing activity.
+        public int HealthBase { get; set; }
+        public virtual int Woundpoints { get => _woundpoints; set { _woundpoints = value; } }
+        public virtual int Painpoints { get => _painpoints; set { _painpoints = value; } }
+        //public virtual int Hitpoints { get => _hitpoints; set { _hitpoints = Math.Min(value, HitpointsMax - Woundpoints); } }
+        public virtual int HealthMax { get => HealthBase + BrawnBase; set { HealthBase = (value - HealthBase - BrawnBase); } }
+        public virtual bool IsDead { get => (HealthMax - Woundpoints <= 0); set { } }
+        public bool IsStunned { get => (HealthMax - Woundpoints - Painpoints <= 0); set { } }
+        public string Health { get => (HealthMax - Woundpoints - Painpoints).ToString() + "(" +
+                (HealthMax - Woundpoints).ToString() + "/" + HealthMax.ToString() + ")";  set { } }
         public Inventory Inventory { get; set; }
-        public Actor() 
+        public Actor()
         {
             Inventory = new Inventory();
         }
@@ -85,15 +96,15 @@ namespace brazenborderlands
             ReflexesBase = attributeBase;
             EgoBase = attributeBase;
             SoakBase = attributeBase / 2;
-            Hitpoints = BrawnBase;
-            HitpointMax = BrawnBase;
-            }
+            HealthBase = level * 2;
+        }
 
         public void JiggleAttributes()
         {
             BrawnBase += Dice.Roll("1d5 - 3");
             ReflexesBase += Dice.Roll("1d5 - 3");
             EgoBase += Dice.Roll("1d5 - 3");
+            HealthBase = Dice.Roll(Level.ToString() + "d3");
         }
 
         public virtual int Brawn()
@@ -130,31 +141,6 @@ namespace brazenborderlands
             }
             return soak;
         }
-        //public virtual Weapon MeleeAttack()
-        //{
-        //    Weapon fist = new Weapon(MeleeWeaponType.Fist);
-        //    return fist;
-        //}
-        //public virtual int Defense()
-        //{
-        //    return Reflexes();
-        //}
-        //public virtual int Soak()
-        //{
-        //    return SoakBase;
-        //}
-        public virtual int BoundsCheck(int value, int min, int max)
-        {
-            if (value > max || value < min)
-            {
-                throw new NotSupportedException("Attempt to set value " + value.ToString() + 
-                    "outside supported range [" + min.ToString() + "," + max.ToString() + "].");
-            };
-            return value;
-        }
-        public virtual int BoundsCheck(int value)
-        {
-            return BoundsCheck(value, 1, 99);
-        }
+
     }
 }

@@ -20,16 +20,13 @@ namespace brazenborderlands
             get => _icon; 
             set { _icon = value; UpdateGlyph(); }
         }
-        public override int SoakBase { get => 40 * Brawn() / 100; set { } }
-        //public Inventory Inventory { get; set; }
 
-        //public override Weapon EquippedMeleeWeapon 
-        //{ 
-        //    get
-        //    {
-        //        return Inventory.EquippedWeapon() ?? new Weapon(MeleeWeaponType.Fist);
-        //    }
-        //    set { } }
+        // PC's add half of Ego to HP max
+        public override int SoakBase { get => 40 * Brawn() / 100; set { } }
+        public override int HealthMax { 
+            get => HealthBase + BrawnBase + EgoBase / 2; 
+            set { HealthBase = (value - HealthBase - BrawnBase - EgoBase / 2); } 
+        }
 
         public Player(int xcurrent, int ycurrent) : base(xcurrent, ycurrent, "[U+E400]", "turquoise")
         {
@@ -37,18 +34,12 @@ namespace brazenborderlands
             icon = TileFinder.TileGridLookup(25, 2);
             //icon = TileFinder.TileGridLookup(1, 1, TileFinder.TileSheet.Items);
             InitByLevelNorm(1);
-            HitpointMax = BrawnBase + EgoBase / 3 + Level * 5;
-            Hitpoints = HitpointMax;
             Inventory = new Inventory();
 
             Name = "Boraxus";
             Species = "Elf";
             Class = "Warrior";
             Level = 1;
-            //Weapon w = new Weapon(MeleeWeaponType.Broadsword, Material.IronWood);
-            //w.IsEquipped = false;
-            //Inventory.Add(w);
-            //Inventory.Equip(0);
         }
         public override bool Act()
         {
