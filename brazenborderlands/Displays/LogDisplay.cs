@@ -27,8 +27,8 @@ namespace brazenborderlands.Displays
             base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
         {
             LogBorderSpaces = 1;
-            SpacingAfterParagraph = 2;
-            SpacingAfterLine = 1;
+            SpacingAfterParagraph = 1;
+            SpacingAfterLine = 0;
         }
 
         public void AppendEntry(string part)

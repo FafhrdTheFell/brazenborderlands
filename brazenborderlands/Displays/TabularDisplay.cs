@@ -30,6 +30,14 @@ namespace brazenborderlands
             Contents = contents;
         }
         public TabularDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset,
+        int columns) : base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
+        {
+            TabularBorderSpaces = 1;
+            Rows = NRowsAutoSpacing();
+            Columns = columns;
+            DefaultInit();
+        }
+        public TabularDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset,
             int rows, int columns) : base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
         {
             TabularBorderSpaces = 1;
@@ -62,8 +70,8 @@ namespace brazenborderlands
         }
         private void DefaultInit()
         {
-            int rowSpacing = EffectiveCellsWidth() / (Rows-1);
-            int columnSpacing = EffectiveCellsHeight() / (Columns - 1);
+            int rowSpacing = EffectiveCellsHeight() / (Rows-1);
+            int columnSpacing = EffectiveCellsWidth() / (Columns - 1);
             Contents = new string[Rows, Columns];
             RowTabs = new List<int>() { 0 };
             ColumnTabs = new List<int>() { 0 };
@@ -93,6 +101,10 @@ namespace brazenborderlands
         private int DisplayY(int y)
         {
             return y + YOffset + TabularBorderSpaces + Consts.YScaleGlyphs * (AddBorder ? 1 : 0);
+        }
+        private int NRowsAutoSpacing()
+        {
+            return EffectiveCellsHeight() / Consts.YScaleText;
         }
     }
 }
