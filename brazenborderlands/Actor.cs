@@ -101,10 +101,10 @@ namespace brazenborderlands
 
         public void JiggleAttributes()
         {
-            BrawnBase += Dice.Roll("1d5 - 3");
-            ReflexesBase += Dice.Roll("1d5 - 3");
-            EgoBase += Dice.Roll("1d5 - 3");
-            HealthBase = Dice.Roll(Level.ToString() + "d3");
+            BrawnBase += Helpers.PlusOrMinus(2);
+            ReflexesBase += Helpers.PlusOrMinus(2);
+            EgoBase += Helpers.PlusOrMinus(2);
+            HealthBase = Helpers.PlusOrMinus(3);
         }
 
         public virtual int Brawn()
