@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using term = BearLib.Terminal;
 
@@ -37,26 +38,59 @@ namespace brazenborderlands
             }
         }
 
-        public void InventoryLoop()
+        public bool InventoryLoop()
         {
             Program.inventoryDisplay.Dirty = true;
             Program.inventoryDisplay.GlobalDirty = true;
-            Program.inventoryDisplay.Draw();
             bool inventoryActive = true;
+            bool acted = false;
             while (inventoryActive)
             {
+                Program.inventoryDisplay.Draw();
                 term.Refresh();
                 int r = term.Read();
                 // shift does not work with numpad on my laptop...
                 bool shiftdown = (term.State(term.TK_SHIFT) == 1);
-                switch (r)
+                if (r == term.TK_ESCAPE)
                 {
-                    case term.TK_0:
-                        inventoryActive = false; break;
+                    if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None)
+                    {
+                        inventoryActive = false;
+                    }
+                    else
+                    {
+                        Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.None;
+                    }
                 }
+                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.Equip)
+                {
+                    if (Program.inventoryDisplay.EquipChosenItem(r)) acted = true; 
+                }
+                else if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.Drop)
+                {
+                    if (Program.inventoryDisplay.DropChosenItem(r)) acted = true;
+                }
+                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None && 
+                    r == term.TK_E) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Equip;
+                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
+                    r == term.TK_D) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Drop;
+
+                //    switch (r)
+                //{
+                //    case term.TK_D:
+                //        Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Drop; break;
+                //    case term.TK_E:
+                //        Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Equip; break;
+                //    case term.TK_ESCAPE:
+                //        inventoryActive = false; break;
+                //}
             }
             Program.inventoryDisplay.Hide();
+            Program.locationDisplay.Draw();
+            Program.logDisplay.Draw();
+            Program.characterDisplay.Draw();
             term.Refresh();
+            return acted;
         }
 
         public void WaitForKey()

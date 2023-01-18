@@ -12,6 +12,7 @@ namespace brazenborderlands
         private string _drawingGlyph;
         private string _drawingColor;
         private string _name;
+        private string _description;
         public override string DrawingGlyph { get { return _drawingGlyph ?? Item.DefaultMeleeWeaponGlyph(WeaponType); } set { _drawingGlyph = value; } }
         public override string DrawingColor { get { return _drawingColor ?? Item.DefaultMaterialColors(Material); } set { _drawingColor = value; } }
         public int PctAccuracyBrawn { get; set; }
@@ -28,6 +29,11 @@ namespace brazenborderlands
         {
             get { return _name ?? MaterialString() + " " + WeaponTypeString(); }
             set { _name = value; }
+        }
+        public override string Description
+        {
+            get { return _description ?? DescriptionString(); }
+            set { _description = value; }
         }
 
 
@@ -187,6 +193,10 @@ namespace brazenborderlands
         public string WeaponTypeString()
         {
             return Enum.GetName(typeof(MeleeWeaponType), WeaponType);
+        }
+        public string DescriptionString()
+        {
+            return "Wielding : " + Accuracy(Program.player).ToString() + " Accuracy, " + Damage(Program.player).ToString() + " Damage";
         }
         public static Weapon RandomWeapon(int rarity)
         {

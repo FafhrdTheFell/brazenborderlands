@@ -110,15 +110,11 @@ namespace brazenborderlands
         }
         public void Rebuild()
         {
-            System.Console.WriteLine(Items.Count.ToString());
             for (int i = 0; i < Items.Count; i++)
             {
-                System.Console.WriteLine(Items[i].Template);
                 Item newi = Items[i].Rebuild();
                 Items[i] = newi;
-                System.Console.WriteLine(Items[i].Template);
             }
-            System.Console.WriteLine(Items.Count.ToString());
         }
     }
 }

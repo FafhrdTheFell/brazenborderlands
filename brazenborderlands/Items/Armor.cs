@@ -11,6 +11,7 @@ namespace brazenborderlands
     internal class Armor : Item, IArmor
     {
         private string _name;
+        private string _description;
         private string _drawingGlyph;
         private string _drawingColor;
         public override string DrawingGlyph { get { return _drawingGlyph ?? Item.DefaultArmorGlyph(ArmorType); } set { _drawingGlyph = value; } }
@@ -28,6 +29,12 @@ namespace brazenborderlands
             get { return _name ?? MaterialString() + " " + ArmorTypeString(); }
             set { _name = value; }
         }
+        public override string Description 
+        { 
+            get { return _description ?? DescriptionString(); }
+            set { _description = value; }
+        }
+
 
         public Armor(ArmorType armorType, Material material)
         {
@@ -149,6 +156,15 @@ namespace brazenborderlands
         public string ArmorTypeString()
         {
             return Enum.GetName(typeof(ArmorType), ArmorType);
+        }
+        public string DescriptionString()
+        {
+            string dc = (DefenseChange(Program.player) > 0) ? "+" : "";
+            dc += DefenseChange(Program.player).ToString();
+            string sc = (SoakChange(Program.player) > 0) ? "+" : "";
+            if (Slot == EquipmentSlot.Body) sc = "";
+            sc += SoakChange(Program.player).ToString();
+            return "Equipped : " + dc + " Defense, " + sc + " Soak";
         }
         public static Armor RandomArmor(int rarity)
         {

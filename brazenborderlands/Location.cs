@@ -61,20 +61,17 @@ namespace brazenborderlands
 
             Stair stairsdown = new Stair(true);
             RandomizePositionNear(Program.player.x, Program.player.y, stairsdown);
-            System.Console.WriteLine(stairsdown.x.ToString() + " " + stairsdown.y.ToString());
             Stairs.Add(stairsdown);
 
             //Weapon sword = new Weapon(MeleeWeaponType.Broadsword, Material.IronWood);
             Weapon sword = Weapon.RandomWeapon(2);
             RandomizePositionNear(Program.player.x, Program.player.y, sword, 3);
-            System.Console.WriteLine(sword.x.ToString() + " " + sword.y.ToString());
             Items.Add(sword);
 
 
             Armor armor = Armor.RandomArmor(2);
             armor = (Armor)armor.Rebuild();
             RandomizePositionNear(Program.player.x, Program.player.y, armor, 4);
-            System.Console.WriteLine(armor.x.ToString() + " " + armor.y.ToString() + " " + armor.Template + armor.DrawingGlyph + armor.DrawingColor);
             Items.Add(armor);
 
             Monster monster = new Monster(1, Monster.MonsterKind.Raider, Monster.MonsterAttribute.Minion);
@@ -202,14 +199,19 @@ namespace brazenborderlands
         {
             if (player.Inventory.Items.Count == 0) { return false; }
             int randomItem = Dice.Roll("1d" + player.Inventory.Items.Count.ToString() + " -1");
-            bool currentlyEquipped = player.Inventory.Items[randomItem].IsEquipped;
+            return Equip(player, randomItem);
+        }
+        public bool Equip(Player player, int item)
+        {
+            if (player.Inventory.Items.Count < item) { return false; }
+            bool currentlyEquipped = player.Inventory.Items[item].IsEquipped;
             if (currentlyEquipped)
             {
-                player.Inventory.Unequip(randomItem);
+                player.Inventory.Unequip(item);
             }
             else
             {
-                player.Inventory.Equip(randomItem);
+                player.Inventory.Equip(item);
             }
             return true;
         }
@@ -217,7 +219,6 @@ namespace brazenborderlands
         {
             Item i = possessor.Inventory.Items[inventoryNum];
             bool success = possessor.Inventory.Remove(inventoryNum);
-            System.Console.WriteLine("dropping " + i.Name + " " + success.ToString());
             if (!success) return false;
             i.x = possessor.x;
             i.y = possessor.y;

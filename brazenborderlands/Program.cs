@@ -67,6 +67,7 @@ namespace brazenborderlands
             term.Set("palette.Elfmetal=67,179,174");
             term.Set("palette.Cotton=230,227,223");
             term.Set("palette.RedLacquer=153,28,32");
+            term.Set("palette.Red=204,0,26");
 
 
             player = new Player(0, 0);

@@ -8,10 +8,10 @@ namespace brazenborderlands
     internal class TabularDisplay : BorderedDisplay
     {
         private int _tabularBorderSpaces;
-        public int Rows { get; set; }
-        public int Columns { get; set; }
-        public List<int> RowTabs { get; set; }
-        public List<int> ColumnTabs { get; set; }
+        public int YLines { get; set; }
+        public int XColumns { get; set; }
+        public List<int> YTabs { get; set; }
+        public List<int> XTabs { get; set; }
         public string[,] Contents { get; set; }
         public int TabularBorderSpaces 
         { 
@@ -23,27 +23,29 @@ namespace brazenborderlands
             base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
         {
             TabularBorderSpaces = 1;
-            Rows = rows;
-            Columns = columns;
-            RowTabs = rowTabs;
-            ColumnTabs = columnTabs;
+            YLines = rows;
+            XColumns = columns;
+            YTabs = rowTabs;
+            XTabs = columnTabs;
             Contents = contents;
         }
         public TabularDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset,
         int columns) : base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
         {
             TabularBorderSpaces = 1;
-            Rows = NRowsAutoSpacing();
-            Columns = columns;
-            DefaultInit();
+            RowsAutoSpacing();
+            XColumns = columns;
+            ColumnsEqualSpacing();
+            InitContents();
         }
         public TabularDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset,
             int rows, int columns) : base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
         {
             TabularBorderSpaces = 1;
-            Rows = rows;
-            Columns = columns;
-            DefaultInit();
+            YLines = rows;
+            XColumns = columns;
+            ColumnsEqualSpacing();
+            InitContents();
         }
         public TabularDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset) :
             base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset)
@@ -60,29 +62,22 @@ namespace brazenborderlands
             {
                 DrawBorder();
             }
-            for (int y = 0; y < Rows; y++) 
+            for (int y = 0; y < YLines; y++) 
             {
-                for (int x = 0; x < Columns; x++)
+                for (int x = 0; x < XColumns; x++)
                 {
-                    term.Print(DisplayX(ColumnTabs[x]), DisplayY(RowTabs[y]), Contents[x, y]);
+                    term.Print(DisplayX(XTabs[x]), DisplayY(YTabs[y]), Contents[x, y]);
                 }
             }
         }
-        private void DefaultInit()
+        protected void InitContents()
         {
-            int rowSpacing = EffectiveCellsHeight() / (Rows-1);
-            int columnSpacing = EffectiveCellsWidth() / (Columns - 1);
-            Contents = new string[Rows, Columns];
-            RowTabs = new List<int>() { 0 };
-            ColumnTabs = new List<int>() { 0 };
-            for (int x = 0; x < Rows; x++)
+            Contents = new string[XColumns, YLines];
+            for (int x = 0; x < XColumns; x++)
             {
-                if (x > 0) ColumnTabs.Add(rowSpacing*x);
-                for (int y = 0; y < Columns; y++)
+                for (int y = 0; y < YLines; y++)
                 {
-                    if (y > 0) RowTabs.Add(columnSpacing*y);
-                    Contents[x, y] = new string(x.ToString() + y.ToString());
-                    //Contents[x, y] = new string("");
+                    Contents[x, y] = new string("");
                 }
             }
         }
@@ -102,9 +97,32 @@ namespace brazenborderlands
         {
             return y + YOffset + TabularBorderSpaces + Consts.YScaleGlyphs * (AddBorder ? 1 : 0);
         }
-        private int NRowsAutoSpacing()
+        protected void RowsAutoSpacing()
         {
-            return EffectiveCellsHeight() / Consts.YScaleText;
+            YLines =  EffectiveCellsHeight() / Consts.YScaleText;
+            YTabs = new List<int> { };
+            for (int i = 0; i < EffectiveCellsHeight(); i += Consts.YScaleText)
+            {
+                YTabs.Add(i);
+            }
+        }
+        protected void RowsEqualSpacing()
+        {
+            int rowSpacing = EffectiveCellsHeight() / (YLines - 1);
+            YTabs = new List<int>() { };
+            for (int y = 0; y < YLines; y++)
+            {
+                YTabs.Add(rowSpacing * y);
+            }
+        }
+        protected void ColumnsEqualSpacing()
+        {
+            int columnSpacing = EffectiveCellsWidth() / (XColumns - 1);
+            XTabs = new List<int>() {};
+            for (int x = 0; x < XColumns; x++)
+            {
+                XTabs.Add(columnSpacing * x);
+            }
         }
     }
 }

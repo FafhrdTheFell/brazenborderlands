@@ -189,7 +189,7 @@ namespace brazenborderlands
         public EquipmentType Type { get; set; }
         public bool IsEquipped { get; set; }
         public virtual string Name { get; set; }
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
         public string Template { get; set; }
         public virtual string DrawingGlyph { get; set; }
         public virtual string DrawingColor { get; set; }

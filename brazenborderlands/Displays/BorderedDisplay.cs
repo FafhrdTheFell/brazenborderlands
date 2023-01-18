@@ -9,6 +9,7 @@ namespace brazenborderlands
     internal class BorderedDisplay : IDisplayWindow
     {
         private bool _globalDirty;
+        private string _borderColor;
         public bool AddBorder { get; set; }
 
         public int XOffset { get; set; }
@@ -21,6 +22,14 @@ namespace brazenborderlands
         public int CellsHeight { get; set; }
 
         public int BorderSpaces { get; set; }
+        public string BorderColor { 
+            get => _borderColor;
+            set
+            {
+                SetBorderColor(value);
+                _borderColor = value;
+            } 
+        }
 
         public bool Dirty { get; set; }
         public bool GlobalDirty
@@ -47,12 +56,12 @@ namespace brazenborderlands
             }
         }
 
-        private string GlyphBorderNECorner = TileFinder.AssembledTile(36, 1, "brown");
-        private string GlyphBorderNWCorner = TileFinder.AssembledTile(36, 2, "brown");
-        private string GlyphBorderSECorner = TileFinder.AssembledTile(36, 3, "brown");
-        private string GlyphBorderSWCorner = TileFinder.AssembledTile(36, 4, "brown");
-        private string GlyphBorderHorizontal = TileFinder.AssembledTile(36, 5, "brown");
-        private string GlyphBorderVertical = TileFinder.AssembledTile(36, 6, "brown");
+        private string GlyphBorderNECorner = TileFinder.AssembledTile(36, 1, "Gray");
+        private string GlyphBorderNWCorner = TileFinder.AssembledTile(36, 2, "Gray");
+        private string GlyphBorderSECorner = TileFinder.AssembledTile(36, 3, "Gray");
+        private string GlyphBorderSWCorner = TileFinder.AssembledTile(36, 4, "Gray");
+        private string GlyphBorderHorizontal = TileFinder.AssembledTile(36, 5, "Gray");
+        private string GlyphBorderVertical = TileFinder.AssembledTile(36, 6, "Gray");
         private int BorderGlyphWidthBlocks = Consts.XScaleGlyphs;
         private int BorderGlyphHeightBlocks = Consts.YScaleGlyphs;
         private int SolidGlyphWidthBlocks = Consts.XScaleGlyphs;
@@ -60,6 +69,7 @@ namespace brazenborderlands
 
         public BorderedDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset)
         {
+            BorderColor = "light gray";
             BorderSpaces = 1;
             AddBorder = true;
             XOffset = cellsXOffset;
@@ -108,28 +118,6 @@ namespace brazenborderlands
             term.ClearArea(XOffset, YOffset, CellsWidth, CellsHeight);
             term.Layer(currentLayer);
         }
-        public void ColorDisplayLayer(int layer, string color, int borderSpaces)
-        {
-            int origLayer = termLayer();
-            term.Layer(layer);
-            for (int x = 0; x < CellsWidth; x+=1)
-            {
-                for (int y = 0; y < CellsHeight; y+=1)
-                {
-                    int adjx = Math.Min(CellsWidth - borderSpaces - SolidGlyphWidthBlocks, Math.Max(borderSpaces, x));
-                    int adjy = Math.Min(CellsHeight - borderSpaces - SolidGlyphHeightBlocks, Math.Max(borderSpaces, y));
-                    if (x > CellsWidth - 10) { System.Console.WriteLine(x.ToString() + " " + adjx.ToString()); }
-                    term.Print(adjx + XOffset, adjy + YOffset, SolidGlyph(color));
-                    if (x == 0)
-                    {
-                        System.Console.WriteLine("waited");
-                        //Program.gameLoop.WaitForKey();
-                        term.Refresh();
-                    } 
-                }
-            }
-            term.Layer(origLayer);
-        }
         protected string SolidGlyph(string color)
         {
             return TileFinder.AssembledTile(37, 9, color);
@@ -138,7 +126,15 @@ namespace brazenborderlands
         {
             return term.State(term.TK_LAYER);
         }
-
+        protected void SetBorderColor(string color)
+        {
+            GlyphBorderNECorner = TileFinder.AssembledTile(36, 1, color);
+            GlyphBorderNWCorner = TileFinder.AssembledTile(36, 2, color);
+            GlyphBorderSECorner = TileFinder.AssembledTile(36, 3, color);
+            GlyphBorderSWCorner = TileFinder.AssembledTile(36, 4, color);
+            GlyphBorderHorizontal = TileFinder.AssembledTile(36, 5, color);
+            GlyphBorderVertical = TileFinder.AssembledTile(36, 6, color);
+    }
         // setting GlobalDirty=true with setter then sets
         // GlobalDirty=true for every display in Displays,
         // so causes infinite recursion if done with setter

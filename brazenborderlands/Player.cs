@@ -77,16 +77,6 @@ namespace brazenborderlands
                     acted = Program.location.Move(this, 0, -1); break;
                 case term.TK_KP_9:
                     acted = Program.location.Move(this, 1, -1); break;
-                //case term.TK_F1:
-                //    Program.location.SaveMap("mapdata.json"); break;
-                //case term.TK_F2:
-                //    Program.location.LoadMap("mapdata.json"); break;
-                //case term.TK_F3:
-                //    Program.location.SaveNPCS("npcdata.json"); break;
-                //case term.TK_F4:
-                //    Program.location.LoadNPCS("npcdata.json"); break;
-                case term.TK_I:
-                    acted = Program.location.Equip(this); break;
                 case term.TK_COMMA:
                     if (shiftdown)
                     {
@@ -94,7 +84,6 @@ namespace brazenborderlands
                     }
                     else
                     {
-                        System.Console.WriteLine("pickup");
                         acted = Program.location.PickupItems(this);
                     }
                     break;
@@ -104,7 +93,6 @@ namespace brazenborderlands
                         acted = Program.location.Descend();
                     }
                     break;
-
                 case term.TK_F1:
                     icon++;
                     acted = true;
@@ -113,8 +101,8 @@ namespace brazenborderlands
                     icon--;
                     acted = true;
                     break;
-                case term.TK_F3:
-                    Program.gameLoop.InventoryLoop(); break;
+                case term.TK_I:
+                    acted = Program.gameLoop.InventoryLoop(); break;
 
             }
             return acted;

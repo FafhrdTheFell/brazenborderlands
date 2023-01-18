@@ -22,7 +22,7 @@ namespace brazenborderlands
         private int ViewpointYBorder;
         private bool AutoAdjustFocus = true;
         private bool InfoStats = true;
-        private bool ActorStats = true;
+        private bool ActorStats = false;
 
         private int _viewportMinX;
         private int _viewportMinY;
@@ -182,7 +182,7 @@ namespace brazenborderlands
                 {
                     if (location.FOV.IsInFov(a.x, a.y))
                     {
-                        term.Print(DisplayX(a.x), DisplayY(a.y) + 2, ColoredString(a.Health, "red", "darker"));
+                        term.Print(DisplayX(a.x)-1, DisplayY(a.y) + 2, ColoredString(a.Health, "red", "darker"));
                     }
                 }
             }
