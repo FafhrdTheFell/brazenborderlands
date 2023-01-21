@@ -12,7 +12,8 @@ namespace brazenborderlands.Displays
         {
             None,
             Drop,
-            Equip
+            Equip,
+            Use
         }
 
         InventoryMode _mode;
@@ -24,10 +25,13 @@ namespace brazenborderlands.Displays
                 _mode = value;
             }
         }
-        public InventoryDisplay() : this(5 * Consts.TermWidthBlocks / 6, 5 * Consts.TermHeightBlocks / 6, Consts.TermWidthBlocks / 12, Consts.TermHeightBlocks / 12) { }
-        public InventoryDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset) :
+        public Player Player { get; set; }
+        public InventoryDisplay() : this(5 * Consts.TermWidthBlocks / 6, 5 * Consts.TermHeightBlocks / 6, Consts.TermWidthBlocks / 12, 
+            Consts.TermHeightBlocks / 12, Program.player) { }
+        public InventoryDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset, Player player) :
             base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset, 6)
         {
+            Player = player;
             Mode = InventoryMode.None;
             AddBorder = true;
             // spacing, letter, glyph, name, slot, description
@@ -39,6 +43,7 @@ namespace brazenborderlands.Displays
                 (int)((float)EffectiveCellsWidth()*0.5)
             };
             UpdateInventoryList();
+            Player = player;
         }
 
         public override void Draw()
@@ -70,13 +75,13 @@ namespace brazenborderlands.Displays
         {
             InitContents();
             Contents[1, 0] = "INVENTORY";
-            Contents[1, 1] = "d: Drop, e: Equip";
+            Contents[1, 1] = "d: Drop, e: Equip, u: Use";
             Contents[5, 0] = "Acc / Dam: ";
-            Contents[5, 0] += Program.player.MeleeAttack().Accuracy(Program.player).ToString() + " / " +
-                Program.player.MeleeAttack().Damage(Program.player).ToString();
+            Contents[5, 0] += Player.MeleeAttack().Accuracy(Player).ToString() + " / " +
+                Player.MeleeAttack().Damage(Player).ToString();
             Contents[5, 0] += "            Def / Soak: ";
-            Contents[5, 0] += Program.player.Defense().ToString() + " / " +
-                Program.player.Soak().ToString() + "   ";
+            Contents[5, 0] += Player.Defense().ToString() + " / " +
+                Player.Soak().ToString() + "   ";
             if (Mode == InventoryMode.Drop)
             {
                 Contents[1, 3] = "DROP?";
@@ -85,32 +90,43 @@ namespace brazenborderlands.Displays
             {
                 Contents[1, 3] = "EQUIP?";
             }
+            else if (Mode == InventoryMode.Use)
+            {
+                Contents[1, 3] = "USE?";
+            }
             else
             {
                 Contents[1, 3] = "        ";
             }
             Contents[3, 3] = "ITEM";
-            Contents[4, 3] = "USE";
+            Contents[4, 3] = "EQUIPPED";
             Contents[5, 3] = "DESCRIPTION";
             int listStart = 4;
-            for (int i = 0; i < Math.Min(Program.player.Inventory.NumItems(), YLines - listStart); i++)
+            for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
             {
-                char c = (char)('a' + i);
+                Contents[1, i + listStart] = " ";
                 if (Mode != InventoryMode.None)
                 {
-                    Contents[1, i + listStart] = c.ToString();
+                    char c = (char)('a' + i);
+                    if (Mode == InventoryMode.Equip && 
+                        (Player.Inventory.Items[i] is Weapon ||
+                        Player.Inventory.Items[i] is Armor))
+                        Contents[1, i + listStart] = c.ToString();
+                    if (Mode == InventoryMode.Use &&
+                        Player.Inventory.Items[i] is Consumable)
+                        Contents[1, i + listStart] = c.ToString();
                 }
-                Contents[2, i + listStart] = Program.player.Inventory.Items[i].DrawingGlyph;
-                Contents[3, i + listStart] = Program.player.Inventory.Items[i].Name;
-                Contents[4, i + listStart] = Program.player.Inventory.Items[i].IsEquipped ?
-                    Enum.GetName(typeof(EquipmentSlot), Program.player.Inventory.Items[i].Slot) : "             ";
-                Contents[5, i + listStart] = Program.player.Inventory.Items[i].Description;
+                Contents[2, i + listStart] = Player.Inventory.Items[i].DrawingGlyph;
+                Contents[3, i + listStart] = Player.Inventory.Items[i].Name;
+                Contents[4, i + listStart] = Player.Inventory.Items[i].IsEquipped ?
+                    Enum.GetName(typeof(EquipmentSlot), Player.Inventory.Items[i].Slot) : "             ";
+                Contents[5, i + listStart] = Player.Inventory.Items[i].Description;
             }
         }
         public int? ChosenItem(int input)
         {
             int choiceRow = input - 4; // BearLibTerm 'a' = integer 4
-            if (choiceRow < 0 || choiceRow >= Program.player.Inventory.NumItems())
+            if (choiceRow < 0 || choiceRow >= Player.Inventory.NumItems())
             {
                 return null;
             }
@@ -120,7 +136,17 @@ namespace brazenborderlands.Displays
         {
             int? item = ChosenItem(input);
             if (item == null) return false;
-            bool r = Program.location.Equip(Program.player, (int)item);
+            bool r = Program.location.Equip(Player, (int)item);
+            if (r) Mode = InventoryMode.None;
+            UpdateInventoryList();
+            Dirty = true;
+            return r;
+        }
+        public bool UseChosenItem(int input)
+        {
+            int? item = ChosenItem(input);
+            if (item == null) return false;
+            bool r = Program.location.UseItem(Player, (int)item);
             if (r) Mode = InventoryMode.None;
             UpdateInventoryList();
             Dirty = true;
@@ -130,7 +156,7 @@ namespace brazenborderlands.Displays
         {
             int? item = ChosenItem(input);
             if (item == null) return false;
-            bool r = Program.location.DropItem(Program.player, (int)item);
+            bool r = Program.location.DropItem(Player, (int)item);
             if (r) Mode = InventoryMode.None;
             UpdateInventoryList();
             Dirty = true;

@@ -4,10 +4,6 @@ using RogueSharp.MapCreation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Drawing.Printing;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Drawing;
 
 namespace brazenborderlands
 {
@@ -68,6 +64,13 @@ namespace brazenborderlands
             RandomizePositionNear(Program.player.x, Program.player.y, sword, 3);
             Items.Add(sword);
 
+            Consumable pebble = new Consumable(MiscItemType.Pebble, MiscItemUsage.HealVisible, 1);
+            RandomizePositionNear(Program.player.x, Program.player.y, pebble, 3);
+            Items.Add(pebble);
+
+            Consumable pebble2 = new Consumable(MiscItemType.Pebble, MiscItemUsage.PainVisible, 1);
+            RandomizePositionNear(Program.player.x, Program.player.y, pebble2, 3);
+            Items.Add(pebble2);
 
             Armor armor = Armor.RandomArmor(2);
             armor = (Armor)armor.Rebuild();
@@ -213,6 +216,13 @@ namespace brazenborderlands
             {
                 player.Inventory.Equip(item);
             }
+            return true;
+        }
+        public bool UseItem(Actor possessor, int inventoryNum)
+        {
+            Item i = possessor.Inventory.Items[inventoryNum];
+            bool success = possessor.Inventory.Use(inventoryNum, possessor);
+            if (!success) return false;
             return true;
         }
         public bool DropItem(Actor possessor, int inventoryNum)
@@ -372,12 +382,12 @@ namespace brazenborderlands
             }
         }
 
-        public Actor[] Actors()
+        public List<Actor> Actors()
         {
             Actor[] npcs = Monsters.ToArray();
             Actor[] player = { Program.player };
-            Actor[] all = npcs.Concat(player).ToArray();
-            return all;
+            //Actor[] all = npcs.Concat(player).ToArray();
+            return npcs.Concat(player).ToList<Actor>();
 
         }
 

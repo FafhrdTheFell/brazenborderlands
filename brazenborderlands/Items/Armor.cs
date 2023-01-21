@@ -45,23 +45,23 @@ namespace brazenborderlands
             {
                 // shirt, vest -> light, hauberk, cuirass -> medium, plate, mail -> heavy
                 case ArmorType.Plate:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 30, -70, 0, 0, 0, 32); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 30, -70, 0, 0, 0, 32); break;
                 case ArmorType.Mail:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 30, -70, 0, 0, 0, 29); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 30, -70, 0, 0, 0, 29); break;
                 case ArmorType.Hauberk:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 20, -40, 0, 0, 0, 20); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 20, -40, 0, 0, 0, 20); break;
                 case ArmorType.Cuirass:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 20, -40, 0, 0, 0, 18); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 20, -40, 0, 0, 0, 18); break;
                 case ArmorType.Vest:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 10, -20, 0, 0, 0, 10); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 10, -20, 0, 0, 0, 10); break;
                 case ArmorType.Shirt:
-                    Init(EquipmentSlot.Body, EquipmentType.BodyArmor, 10, -20, 0, 0, 0, 12); break;
+                    Init(EquipmentSlot.Body, ItemType.BodyArmor, 10, -20, 0, 0, 0, 12); break;
                 case ArmorType.Helmet:
-                    Init(EquipmentSlot.Head, EquipmentType.Headgear, 0, 0, 0, 0, 0, 4); break;
+                    Init(EquipmentSlot.Head, ItemType.Headgear, 0, 0, 0, 0, 0, 4); break;
                 case ArmorType.Shield:
-                    Init(EquipmentSlot.SecondaryHand, EquipmentType.Shield, -10, 30, 0, 0, 0, 3); break;
+                    Init(EquipmentSlot.SecondaryHand, ItemType.Shield, -10, 30, 0, 0, 0, 3); break;
                 case ArmorType.Buckler:
-                    Init(EquipmentSlot.SecondaryHand, EquipmentType.Shield, 10, 10, 0, 0, 0, 0); break;
+                    Init(EquipmentSlot.SecondaryHand, ItemType.Shield, 10, 10, 0, 0, 0, 0); break;
             }
             switch (material)
             {
@@ -94,7 +94,7 @@ namespace brazenborderlands
         //Linothorax,
         //Flexilon
         }
-        public void Init(EquipmentSlot slot, EquipmentType type, int pctDB, int pctDR, int pctDE, int pctSE, int baseDef, int baseSoak)
+        public void Init(EquipmentSlot slot, ItemType type, int pctDB, int pctDR, int pctDE, int pctSE, int baseDef, int baseSoak)
         {
             Slot= slot;
             Type= type;

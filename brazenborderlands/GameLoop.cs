@@ -70,6 +70,16 @@ namespace brazenborderlands
                 {
                     if (Program.inventoryDisplay.DropChosenItem(r)) acted = true;
                 }
+                else if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.Use)
+                {
+                    if (Program.inventoryDisplay.UseChosenItem(r))
+                    {
+                        acted = true;
+                        inventoryActive = false;
+                    }
+                }
+                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
+                    r == term.TK_U) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Use;
                 if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None && 
                     r == term.TK_E) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Equip;
                 if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&

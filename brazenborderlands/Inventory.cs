@@ -21,6 +21,19 @@ namespace brazenborderlands
         }
         public bool Add(Item item)
         {
+            if (item is Consumable)
+            {
+                Consumable c = (Consumable)item;
+                if (c.IsStackable || c.IsCharged)
+                {
+                    Consumable existing = (Consumable)Items.SingleOrDefault(e => e is Consumable && e.Name == c.Name);
+                    if (existing != null)
+                    {
+                        existing.NumUses += c.NumUses;
+                        return true;
+                    }
+                }
+            }
             if (Items.Count < Capacity)
             {
                 Items.Add(item);
@@ -32,6 +45,16 @@ namespace brazenborderlands
         { 
             Items[inventoryNum].IsEquipped = false;
             Items.RemoveAt(inventoryNum);
+            return true;
+        }
+        public bool Use(int inventoryNum, Actor user)
+        {
+            if (!(Items[inventoryNum] is Consumable))
+                return false;
+            Consumable c = (Consumable)Items[inventoryNum];
+            c.Apply(user, user);
+            c.NumUses -= 1;
+            if (c.NumUses == 0) Remove(inventoryNum);
             return true;
         }
         public IEquipment EquipmentInSlot(EquipmentSlot slot)

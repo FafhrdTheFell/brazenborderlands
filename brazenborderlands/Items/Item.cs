@@ -6,6 +6,7 @@ namespace brazenborderlands
 {
     enum EquipmentSlot
     {
+        None,
         PrimaryHand,
         SecondaryHand,
         BothHands,
@@ -17,9 +18,8 @@ namespace brazenborderlands
         Head
     }
 
-    enum EquipmentType
+    enum ItemType
     {
-        Possession,
         BodyPart,
         OneHandMeleeWeapon,
         TwoHandMeleeWeapon,
@@ -30,7 +30,9 @@ namespace brazenborderlands
         Gloves,
         Necklace,
         Cloak,
-        Headgear
+        Headgear,
+        Possession,
+        Consumable
     }
 
     enum Material
@@ -88,10 +90,23 @@ namespace brazenborderlands
         Innate
     }
 
+    // healing => Nelh'aig, paining => Nipn'aig
+    enum MiscItemType
+    {
+        Pebble,
+        Potion,
+        Scroll
+    }
+    enum MiscItemUsage
+    {
+        HealVisible,
+        PainVisible
+    }
+
     internal interface IEquipment
     {
         public EquipmentSlot Slot { get; set; }
-        public EquipmentType Type { get; set; }
+        public ItemType Type { get; set; }
         public bool IsEquipped { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -120,6 +135,13 @@ namespace brazenborderlands
         public int BaseDefense { get; set; }
         public int DefenseChange(Actor wearer);
         public int SoakChange(Actor wearer);
+    }
+    internal interface IConsumable
+    {
+        public bool IsStackable { get; set; }
+        public bool IsCharged { get; set; }
+        public int NumUses { get; set; }
+        public void Apply(Actor user, Actor target);
     }
     internal class ItemProperties
     {
@@ -183,14 +205,14 @@ namespace brazenborderlands
     // derived classes also need to reconstructable by template using Rebuild().
     // Rebuild is a fix for JSON serialization not handling desrialization
     // of objects of a derived class well.
-    internal class Item : IEquipment, IEmbodied
+    internal class Item : IEmbodied, IEquipment
     {
         public EquipmentSlot Slot { get; set; }
-        public EquipmentType Type { get; set; }
+        public ItemType Type { get; set; }
         public bool IsEquipped { get; set; }
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
-        public string Template { get; set; }
+        public virtual string Template { get; set; }
         public virtual string DrawingGlyph { get; set; }
         public virtual string DrawingColor { get; set; }
         public int x { get; set; }
@@ -233,6 +255,9 @@ namespace brazenborderlands
                 case "Armor":
                     return new Armor((ArmorType)Enum.Parse(typeof(ArmorType), tokens[1]),
                         (Material)Enum.Parse(typeof(Material), tokens[2]));
+                case "Consumable":
+                    return new Consumable((MiscItemType)Enum.Parse(typeof(MiscItemType), tokens[1]),
+                        (MiscItemUsage)Enum.Parse(typeof(MiscItemUsage), tokens[2]), Int32.Parse(tokens[3]));
                 default:
                     throw new Exception("Building " + tokens[0] + " is not implemented.");
             }
@@ -266,6 +291,20 @@ namespace brazenborderlands
             }
         }
 
+        public static string DefaultMiscGlyph(MiscItemType type)
+        {
+            switch (type)
+            {
+                case MiscItemType.Pebble:
+                    return TileFinder.TileGridLookupUnicode(4, 17, TileFinder.TileSheet.Items);
+                case MiscItemType.Potion:
+                    return TileFinder.TileGridLookupUnicode(4, 2, TileFinder.TileSheet.Items);
+                case MiscItemType.Scroll:
+                    return TileFinder.TileGridLookupUnicode(12, 2, TileFinder.TileSheet.Items);
+                default:
+                    return TileFinder.TileGridLookupUnicode(13, 13, TileFinder.TileSheet.Items);
+            }
+        }
         public static string DefaultArmorGlyph(ArmorType type)
         {
             switch (type)

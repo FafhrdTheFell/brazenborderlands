@@ -46,29 +46,29 @@ namespace brazenborderlands
             switch (weaponType)
             {
                 case MeleeWeaponType.Fist:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.BodyPart, 50, 50, 0, 50, 30, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.BodyPart, 50, 50, 0, 50, 30, 0); break;
                 case MeleeWeaponType.Claw:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.BodyPart, 50, 50, 0, 50, 50, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.BodyPart, 50, 50, 0, 50, 50, 0); break;
                 case MeleeWeaponType.Broadsword:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 50, 50, 0, 50, 50, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 50, 50, 0, 50, 50, 0); break;
                 case MeleeWeaponType.Dagger:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 40, 80, 0, 40, 40, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 40, 80, 0, 40, 40, 0); break;
                 case MeleeWeaponType.Greatsword:
-                    Init(EquipmentSlot.BothHands, EquipmentType.TwoHandMeleeWeapon, 75, 25, 0, 95, 40, 0); break;
+                    Init(EquipmentSlot.BothHands, ItemType.TwoHandMeleeWeapon, 75, 25, 0, 95, 40, 0); break;
                 case MeleeWeaponType.Hammer:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 65, 45, 0, 60, 30, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 65, 45, 0, 60, 30, 0); break;
                 case MeleeWeaponType.HandAxe:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 60, 40, 0, 60, 40, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 60, 40, 0, 60, 40, 0); break;
                 case MeleeWeaponType.Maul:
-                    Init(EquipmentSlot.BothHands, EquipmentType.TwoHandMeleeWeapon, 75, 20, 0, 100, 35, 0); break;
+                    Init(EquipmentSlot.BothHands, ItemType.TwoHandMeleeWeapon, 75, 20, 0, 100, 35, 0); break;
                 case MeleeWeaponType.Morningstar:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 40, 60, 0, 60, 50, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 40, 60, 0, 60, 50, 0); break;
                 case MeleeWeaponType.Scimitar:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 40, 60, 0, 50, 50, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 40, 60, 0, 50, 50, 0); break;
                 case MeleeWeaponType.Spear:
-                    Init(EquipmentSlot.PrimaryHand, EquipmentType.OneHandMeleeWeapon, 50, 60, 0, 40, 50, 0); break;
+                    Init(EquipmentSlot.PrimaryHand, ItemType.OneHandMeleeWeapon, 50, 60, 0, 40, 50, 0); break;
                 case MeleeWeaponType.Staff:
-                    Init(EquipmentSlot.BothHands, EquipmentType.OneHandMeleeWeapon, 50, 60, 0, 50, 50, 0); break;
+                    Init(EquipmentSlot.BothHands, ItemType.OneHandMeleeWeapon, 50, 60, 0, 50, 50, 0); break;
 
                 default:
                     throw new NotImplementedException("No WeaponType definition for " + Template);
@@ -90,7 +90,7 @@ namespace brazenborderlands
                     BaseDamage += 2; break;
             }
         }
-        public void Init(EquipmentSlot slot, EquipmentType type, int pctAB, int pctAR, int pctAE, int pctDB, int pctDR, int pctDE)
+        public void Init(EquipmentSlot slot, ItemType type, int pctAB, int pctAR, int pctAE, int pctDB, int pctDR, int pctDE)
         {
             Slot = slot;
             Type = type;
