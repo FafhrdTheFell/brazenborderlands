@@ -100,7 +100,10 @@ namespace brazenborderlands
     enum MiscItemUsage
     {
         HealVisible,
-        PainVisible
+        PainVisible,
+        IncreaseBrawn,
+        IncreaseMental,
+        IncreaseReflexes
     }
 
     internal interface IEquipment
@@ -172,6 +175,14 @@ namespace brazenborderlands
             Material.Adamantine, Material.Steel, Material.Bronze, Material.Cuirbolli, Material.Lamellar, Material.Flexilon} },
             { ArmorType.Helmet, new List<Material>() { Material.IronWood, Material.Iron, Material.Elfmetal,
             Material.Adamantine, Material.Steel, Material.Bronze, Material.Cuirbolli } }
+        };
+        public static Dictionary<MiscItemUsage, int> MiscItemUsageRarity = new Dictionary<MiscItemUsage, int>()
+        {
+            { MiscItemUsage.HealVisible, 0 },
+            { MiscItemUsage.PainVisible, 1 },
+            { MiscItemUsage.IncreaseMental, 3 },
+            { MiscItemUsage.IncreaseBrawn, 3 },
+            { MiscItemUsage.IncreaseReflexes, 3 }
         };
         public static Dictionary<MeleeWeaponType, int> WeaponRarity = new Dictionary<MeleeWeaponType, int>()
         {
@@ -353,6 +364,18 @@ namespace brazenborderlands
                     return "RedLacquer";
                 case Material.Linothorax:
                     return "Cotton";
+                default:
+                    return "Gray";
+            }
+        }
+        public static string DefaultUsageColors(MiscItemUsage usage)
+        {
+            switch (usage)
+            {
+                case MiscItemUsage.HealVisible:
+                    return "Pink";
+                case MiscItemUsage.PainVisible:
+                    return "Bronze";
                 default:
                     return "Gray";
             }
