@@ -35,7 +35,7 @@ namespace brazenborderlands
             get => _viewportMinX;
             set
             {
-                if (_viewportMinX!= value) { Dirty = true;  GlobalDirty= true; _viewportMinX = value;}
+                if (_viewportMinX!= value) { Dirty = true;  _viewportMinX = value;}
             }
         }
         public int ViewportMinY
@@ -43,7 +43,7 @@ namespace brazenborderlands
             get => _viewportMinY;
             set
             {
-                if (_viewportMinY != value) { Dirty = true;  GlobalDirty = true; _viewportMinY = value; }
+                if (_viewportMinY != value) { Dirty = true;   _viewportMinY = value; }
             }
         }
 
@@ -298,33 +298,35 @@ namespace brazenborderlands
         public bool AdjustFocusPlayer()
         {
             bool adjusted = false;
+            int vpxOrig = ViewportMinX;
+            int vpyOrig = ViewportMinY;
             // first test is for being too few tiles away from border; second is for drawing
             // outside the display
             if ((location.PlayerX > ViewportMaxX - ViewpointXBorder) || 
                 (DisplayX(location.PlayerX + location.FOVRadius) >= XOffset + CellsWidth))
             {
                 ViewportMinX = Math.Min(ViewportMinX + ViewportAdjustment, location.Map.Width - TilesWidth);
-                adjusted = true;
             }
             if ((location.PlayerY > ViewportMaxY - ViewpointYBorder) ||
                 (DisplayY(location.PlayerY + location.FOVRadius) >= YOffset + CellsHeight))
             {
                 ViewportMinY = Math.Min(ViewportMinY + ViewportAdjustment, location.Map.Height - TilesHeight);
-                adjusted = true;
             }
             if ((location.PlayerX < ViewportMinX + ViewpointXBorder) ||
                 (DisplayX(location.PlayerX - location.FOVRadius) <= XOffset + XScale + (AddBorder ? 1 : 0)))
             {
                 ViewportMinX = Math.Max(ViewportMinX - ViewportAdjustment, 0);
-                adjusted = true;
             }
             if ((location.PlayerY < ViewportMinY + ViewpointYBorder) ||
                 (DisplayY(location.PlayerY - location.FOVRadius) <= YOffset + YScale + (AddBorder ? 1 : 0)))
             {
                 ViewportMinY = Math.Max(ViewportMinY - ViewportAdjustment, 0);
+            }
+            if (vpxOrig != ViewportMinX || vpyOrig != ViewportMinY)
+            {
+                GlobalDirty = true;
                 adjusted = true;
             }
-
             return adjusted;
         }
 
@@ -347,6 +349,7 @@ namespace brazenborderlands
             {
                 ViewportMinY = Math.Min(location.Map.Height - TilesHeight, Math.Max(0, location.PlayerY - TilesHeight / 2));
             }
+            GlobalDirty = true;
             AdjustFocusPlayer();
             return true;
         }
