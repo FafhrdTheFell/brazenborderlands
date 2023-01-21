@@ -176,6 +176,14 @@ namespace brazenborderlands
             { ArmorType.Helmet, new List<Material>() { Material.IronWood, Material.Iron, Material.Elfmetal,
             Material.Adamantine, Material.Steel, Material.Bronze, Material.Cuirbolli } }
         };
+        public static Dictionary<MiscItemUsage, List<MiscItemType>> ItemTypesByUsage = new Dictionary<MiscItemUsage, List<MiscItemType>>
+        {
+            { MiscItemUsage.HealVisible, new List<MiscItemType> {MiscItemType.Pebble} },
+            { MiscItemUsage.PainVisible, new List<MiscItemType> {MiscItemType.Pebble} },
+            { MiscItemUsage.IncreaseBrawn, new List<MiscItemType> {MiscItemType.Potion} },
+            { MiscItemUsage.IncreaseReflexes, new List<MiscItemType> {MiscItemType.Potion} },
+            { MiscItemUsage.IncreaseMental, new List<MiscItemType> {MiscItemType.Scroll} }
+        };
         public static Dictionary<MiscItemUsage, int> MiscItemUsageRarity = new Dictionary<MiscItemUsage, int>()
         {
             { MiscItemUsage.HealVisible, 0 },

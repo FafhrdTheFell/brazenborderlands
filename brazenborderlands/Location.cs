@@ -64,11 +64,11 @@ namespace brazenborderlands
             RandomizePositionNear(Program.player.x, Program.player.y, sword, 3);
             Items.Add(sword);
 
-            Consumable pebble = new Consumable(MiscItemType.Pebble, MiscItemUsage.HealVisible, 1);
+            Consumable pebble = Consumable.RandomConsumable(4);
             RandomizePositionNear(Program.player.x, Program.player.y, pebble, 3);
             Items.Add(pebble);
 
-            Consumable pebble2 = new Consumable(MiscItemType.Pebble, MiscItemUsage.PainVisible, 1);
+            Consumable pebble2 = Consumable.RandomConsumable(4);
             RandomizePositionNear(Program.player.x, Program.player.y, pebble2, 3);
             Items.Add(pebble2);
 

@@ -62,6 +62,11 @@ namespace brazenborderlands
                 Name = "Scroll of Enlightenment";
             }
         }
+        public override int Rarity()
+        {
+            int w = ItemProperties.MiscItemUsageRarity.ContainsKey(Usage) ? ItemProperties.MiscItemUsageRarity[Usage] : 0;
+            return Math.Max(w, NumUses) + (w > 0 && NumUses > 1 ? 1 : 0);
+        }
         public string ConsumableTypeString()
         {
             return Enum.GetName(typeof(MiscItemType), ConsumableType);
@@ -144,6 +149,27 @@ namespace brazenborderlands
                 default:
                     return "???";
             }
+        }
+        public static Consumable RandomConsumable(int rarity)
+        {
+            int generatedRarity = 999;
+            Consumable consumable = new Consumable(MiscItemType.Pebble,MiscItemUsage.HealVisible,1);
+            int tries = 0;
+            while (!(generatedRarity == rarity) && (tries < 50))
+            {
+                tries++;
+                MiscItemUsage u = Helpers.RandomEnumValue<MiscItemUsage>();
+                MiscItemType t = Helpers.RandomEnumValue<MiscItemType>();
+                while (!ItemProperties.ItemTypesByUsage[u].Contains(t))
+                {
+                    t = Helpers.RandomEnumValue<MiscItemType>();
+                }
+                int n = Rules.RarityRoll(1) + 1;
+                Consumable c = new Consumable(t, u, n);
+                generatedRarity = c.Rarity();
+                if (c.Rarity() > consumable.Rarity()) consumable = c;
+            }
+            return consumable;
         }
     }
 }
