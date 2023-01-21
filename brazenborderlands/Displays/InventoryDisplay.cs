@@ -40,7 +40,7 @@ namespace brazenborderlands.Displays
                 (int)((float)EffectiveCellsWidth()*0.1),
                 (int)((float)EffectiveCellsWidth()*0.15),
                 (int)((float)EffectiveCellsWidth()*0.3),
-                (int)((float)EffectiveCellsWidth()*0.5)
+                (int)((float)EffectiveCellsWidth()*0.45)
             };
             UpdateInventoryList();
             Player = player;
@@ -99,7 +99,6 @@ namespace brazenborderlands.Displays
                 Contents[1, 3] = "        ";
             }
             Contents[3, 3] = "ITEM";
-            Contents[4, 3] = "EQUIPPED";
             Contents[5, 3] = "DESCRIPTION";
             int listStart = 4;
             for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
@@ -117,9 +116,9 @@ namespace brazenborderlands.Displays
                         Contents[1, i + listStart] = c.ToString();
                 }
                 Contents[2, i + listStart] = Player.Inventory.Items[i].DrawingGlyph;
-                Contents[3, i + listStart] = Player.Inventory.Items[i].Name;
-                Contents[4, i + listStart] = Player.Inventory.Items[i].IsEquipped ?
-                    Enum.GetName(typeof(EquipmentSlot), Player.Inventory.Items[i].Slot) : "             ";
+                Contents[3, i + listStart] = Player.Inventory.Items[i].NameString();
+                Contents[3, i + listStart] += Player.Inventory.Items[i].IsEquipped ?
+                    " (" + Player.Inventory.Items[i].SlotString() + ")" : "                  ";
                 Contents[5, i + listStart] = Player.Inventory.Items[i].Description;
             }
         }

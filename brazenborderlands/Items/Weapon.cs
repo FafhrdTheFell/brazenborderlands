@@ -1,6 +1,7 @@
 ﻿using RogueSharp.DiceNotation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -194,6 +195,16 @@ namespace brazenborderlands
         {
             return Enum.GetName(typeof(MeleeWeaponType), WeaponType);
         }
+        //public string TemplatePropertyString(int index)
+        //{
+        //    List<string> s = new List<string>();
+        //    List<System.Type> TemplatePropertyList= new List<System.Type>();
+        //    TemplatePropertyList.Add(this.GetType());
+        //    TemplatePropertyList.Add(typeof(MeleeWeaponType));
+        //    TemplatePropertyList.Add(typeof(Material));
+        //    s.Add(TemplatePropertyList[0].Name);
+
+        //}
         public string DescriptionString()
         {
             return "Wielding : " + Accuracy(Program.player).ToString() + " Accuracy, " + Damage(Program.player).ToString() + " Damage";

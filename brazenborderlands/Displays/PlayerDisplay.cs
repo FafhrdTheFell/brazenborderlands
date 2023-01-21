@@ -54,13 +54,11 @@ namespace brazenborderlands
                 Program.player.Soak().ToString() + "  ";
             Contents[2, 2] = "Inventory";
             Contents[2, 3] = "------------";
-            Contents[3, 2] = "Usage";
-            Contents[3, 3] = "--------";
             for (int i = 0; i < Math.Min(Program.player.Inventory.NumItems(), YLines - 5); i++)
             {
-                Contents[2, i + 4] = Program.player.Inventory.Items[i].Name;
-                Contents[3, i + 4] = Program.player.Inventory.Items[i].IsEquipped ? 
-                    Enum.GetName(typeof(EquipmentSlot), Program.player.Inventory.Items[i].Slot) : "             ";
+                Contents[2, i + 4] = Program.player.Inventory.Items[i].NameString();
+                //Contents[3, i + 4] = Program.player.Inventory.Items[i].IsEquipped ? 
+                //    Enum.GetName(typeof(EquipmentSlot), Program.player.Inventory.Items[i].Slot) : "             ";
             }
             if (Program.player.Inventory.NumItems() > YLines - 5)
             {

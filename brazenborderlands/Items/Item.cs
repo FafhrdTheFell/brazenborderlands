@@ -1,6 +1,8 @@
 ﻿using RogueSharp.DiceNotation;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
+using System.Reflection;
 
 namespace brazenborderlands
 {
@@ -261,6 +263,30 @@ namespace brazenborderlands
             {
                 s += tokens[i] + (i < tokens.Length - 1 ? "," : "");
             }
+            return s;
+        }
+        public string NameString()
+        {
+            if (IsEquipped)
+            {
+                return "[color=blue]" + Name + "[/color]";
+            }
+            return Name;
+        }
+        public string SlotString()
+        {
+            string s = "on ";
+            if (Slot == EquipmentSlot.PrimaryHand || Slot == EquipmentSlot.SecondaryHand || Slot == EquipmentSlot.BothHands)
+                s = "in ";
+            if (Slot == EquipmentSlot.Missile)
+                s = "used as ";
+            if (Slot == EquipmentSlot.Neck)
+                s = "around ";
+            s = "[color=darker yellow]" + s;
+            s += Enum.GetName(typeof(EquipmentSlot), Slot);
+            if (Slot == EquipmentSlot.Missile)
+                s += " Weapon";
+            s += "[/color]";
             return s;
         }
         public static Item BuildFromTemplate(string template)
