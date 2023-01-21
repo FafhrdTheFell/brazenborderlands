@@ -168,9 +168,10 @@ namespace brazenborderlands
         }
         public static Armor RandomArmor(int rarity)
         {
-            int generatedRarity = 999;
-            Armor armor = null;
-            while (generatedRarity > rarity)
+            int generatedRarity = -1;
+            Armor armor = new Armor(ArmorType.Shirt, Material.Linothorax);
+            int tries = 0;
+            while (generatedRarity < rarity && tries < 100)
             {
                 ArmorType a = Helpers.RandomEnumValue<ArmorType>();
                 while (ItemProperties.InnateArmor.Contains(a))
@@ -182,8 +183,9 @@ namespace brazenborderlands
                 {
                     m = Helpers.RandomEnumValue<Material>();
                 }
-                armor = new Armor(a, m);
+                Armor newa = new Armor(a, m);
                 generatedRarity = armor.Rarity();
+                if (newa.Rarity() > armor.Rarity() || tries == 1) armor = newa;
             }
             return armor;
         }

@@ -152,10 +152,10 @@ namespace brazenborderlands
         }
         public static Consumable RandomConsumable(int rarity)
         {
-            int generatedRarity = 999;
+            int generatedRarity = -1;
             Consumable consumable = new Consumable(MiscItemType.Pebble,MiscItemUsage.HealVisible,1);
             int tries = 0;
-            while (!(generatedRarity == rarity) && (tries < 50))
+            while ((generatedRarity < rarity) && (tries < 100))
             {
                 tries++;
                 MiscItemUsage u = Helpers.RandomEnumValue<MiscItemUsage>();

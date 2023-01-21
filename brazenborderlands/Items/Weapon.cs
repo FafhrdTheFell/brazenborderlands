@@ -211,10 +211,10 @@ namespace brazenborderlands
         }
         public static Weapon RandomWeapon(int rarity)
         {
-            int generatedRarity = 999;
-            Weapon weapon = null;
+            int generatedRarity = -1;
+            Weapon weapon = new Weapon(MeleeWeaponType.Broadsword, Material.Bronze);
             int tries = 0;
-            while(!(generatedRarity == rarity) && (tries < 50))
+            while(generatedRarity < rarity && (tries < 100))
             {
                 tries++;
                 MeleeWeaponType w = Helpers.RandomEnumValue<MeleeWeaponType>();
@@ -227,8 +227,9 @@ namespace brazenborderlands
                 {
                     m = Helpers.RandomEnumValue<Material>();
                 }
-                weapon = new Weapon(w, m);
-                generatedRarity = weapon.Rarity();
+                Weapon wnew = new Weapon(w, m);
+                generatedRarity = wnew.Rarity();
+                if (wnew.Rarity() > weapon.Rarity() || tries == 1) weapon = wnew;
             }
             return weapon;
         }
