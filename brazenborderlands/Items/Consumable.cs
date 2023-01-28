@@ -31,6 +31,7 @@ namespace brazenborderlands
             ConsumableType = miscItemType;
             Usage = miscItemUsage;
             NumUses = numUses;
+            IsUsable = true;
             if (ConsumableType == MiscItemType.Pebble || ConsumableType == MiscItemType.Potion)
             {
                 IsStackable = true;

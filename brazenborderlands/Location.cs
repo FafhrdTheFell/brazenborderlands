@@ -207,6 +207,7 @@ namespace brazenborderlands
         public bool Equip(Player player, int item)
         {
             if (player.Inventory.Items.Count < item) { return false; }
+            if (!player.Inventory.Items[item].IsEquippable) { return false; }
             bool currentlyEquipped = player.Inventory.Items[item].IsEquipped;
             if (currentlyEquipped)
             {
@@ -221,6 +222,7 @@ namespace brazenborderlands
         public bool UseItem(Actor possessor, int inventoryNum)
         {
             Item i = possessor.Inventory.Items[inventoryNum];
+            if (!i.IsUsable) { return false; }
             bool success = possessor.Inventory.Use(inventoryNum, possessor);
             if (!success) return false;
             return true;

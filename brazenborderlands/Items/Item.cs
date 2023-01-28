@@ -113,6 +113,8 @@ namespace brazenborderlands
         public EquipmentSlot Slot { get; set; }
         public ItemType Type { get; set; }
         public bool IsEquipped { get; set; }
+        public bool IsEquippable { get; set; }
+        public bool IsUsable { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Template { get; set; }
@@ -150,6 +152,7 @@ namespace brazenborderlands
     }
     internal class ItemProperties
     {
+        public static List<ItemType> NotEquippableItemTypes = new List<ItemType>() { ItemType.BodyPart, ItemType.Possession, ItemType.Consumable };
         public static List<MeleeWeaponType> InnateWeapons = new List<MeleeWeaponType>() { MeleeWeaponType.Claw, MeleeWeaponType.Fist };
         public static List<ArmorType> InnateArmor = new List<ArmorType>() { ArmorType.Innate };
         //public static List<Material> ArmorMaterials = new List<Material>() { Material.IronWood, Material.Iron, Material.Elfmetal,
@@ -231,6 +234,12 @@ namespace brazenborderlands
         public EquipmentSlot Slot { get; set; }
         public ItemType Type { get; set; }
         public bool IsEquipped { get; set; }
+        public virtual bool IsEquippable
+        {
+            get => (ItemProperties.NotEquippableItemTypes.Contains(Type) ? false : true);
+            set { }
+        }
+        public virtual bool IsUsable { get; set; }
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
         public virtual string Template { get; set; }
@@ -242,6 +251,7 @@ namespace brazenborderlands
         public Item() 
         { 
             Glyph = new Glyph();
+            IsUsable = false;
         }
         public Item Rebuild()
         {

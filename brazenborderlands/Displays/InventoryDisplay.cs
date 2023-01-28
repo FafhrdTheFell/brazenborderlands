@@ -36,9 +36,9 @@ namespace brazenborderlands.Displays
             AddBorder = true;
             // spacing, letter, glyph, name, slot, description
             XTabs = new List<int> { 0,
-                (int)((float)EffectiveCellsWidth()*0.04),
-                (int)((float)EffectiveCellsWidth()*0.08),
-                (int)((float)EffectiveCellsWidth()*0.12),
+                (int)((float)EffectiveCellsWidth()*0.02),
+                (int)((float)EffectiveCellsWidth()*0.07),
+                (int)((float)EffectiveCellsWidth()*0.10),
                 (int)((float)EffectiveCellsWidth()*0.3),
                 (int)((float)EffectiveCellsWidth()*0.48)
             };
@@ -102,17 +102,17 @@ namespace brazenborderlands.Displays
             for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
             {
                 Contents[1, i + listStart] = "    ";
-                if (Mode != InventoryMode.None)
-                {
-                    char c = (char)('a' + i);
-                    if (Mode == InventoryMode.Equip && 
-                        (Player.Inventory.Items[i] is Weapon ||
-                        Player.Inventory.Items[i] is Armor))
-                        Contents[1, i + listStart] = "  " + c.ToString();
-                    if (Mode == InventoryMode.Use &&
-                        Player.Inventory.Items[i] is Consumable)
-                        Contents[1, i + listStart] = "  " + c.ToString();
-                }
+                char c = (char)('a' + i);
+                if (Mode == InventoryMode.Equip &&
+                    (Player.Inventory.Items[i] is Weapon ||
+                    Player.Inventory.Items[i] is Armor))
+                    Contents[1, i + listStart] = "  " + c.ToString();
+                else if (Mode == InventoryMode.Use &&
+                    Player.Inventory.Items[i] is Consumable)
+                    Contents[1, i + listStart] = "  " + c.ToString();
+                else if (Mode == InventoryMode.Drop)
+                    Contents[1, i + listStart] = "  " + c.ToString();
+                else Contents[1, i + listStart] = "  " + "[color=gray]" + c.ToString() + "[/color]";
                 Contents[3, i + listStart] = Player.Inventory.Items[i].NameString();
                 Contents[3, i + listStart] += Player.Inventory.Items[i].IsEquipped ?
                     " (" + Player.Inventory.Items[i].SlotString() + ")" : "                  ";

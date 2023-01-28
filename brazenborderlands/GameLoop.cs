@@ -62,7 +62,13 @@ namespace brazenborderlands
                         Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.None;
                     }
                 }
-                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.Equip)
+                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
+                    r == term.TK_U) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Use;
+                else if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
+                    r == term.TK_E) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Equip;
+                else if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
+                    r == term.TK_D) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Drop;
+                else if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.Equip)
                 {
                     if (Program.inventoryDisplay.EquipChosenItem(r)) acted = true; 
                 }
@@ -78,12 +84,7 @@ namespace brazenborderlands
                         inventoryActive = false;
                     }
                 }
-                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
-                    r == term.TK_U) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Use;
-                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None && 
-                    r == term.TK_E) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Equip;
-                if (Program.inventoryDisplay.Mode == Displays.InventoryDisplay.InventoryMode.None &&
-                    r == term.TK_D) Program.inventoryDisplay.Mode = Displays.InventoryDisplay.InventoryMode.Drop;
+
 
                 //    switch (r)
                 //{
