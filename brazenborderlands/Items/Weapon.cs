@@ -10,12 +10,8 @@ namespace brazenborderlands
 {
     internal class Weapon : Item, IWeapon 
     {
-        private string _drawingGlyph;
-        private string _drawingColor;
         private string _name;
         private string _description;
-        public override string DrawingGlyph { get { return _drawingGlyph ?? Item.DefaultMeleeWeaponGlyph(WeaponType); } set { _drawingGlyph = value; } }
-        public override string DrawingColor { get { return _drawingColor ?? Item.DefaultMaterialColors(Material); } set { _drawingColor = value; } }
         public int PctAccuracyBrawn { get; set; }
         public int PctAccuracyReflexes { get; set; }
         public int PctAccuracyEgo { get; set; }
@@ -90,6 +86,9 @@ namespace brazenborderlands
                     PctAccuracyBrawn += 8; PctAccuracyReflexes += 8; PctDamageBrawn += 15;
                     BaseDamage += 2; break;
             }
+            Glyph.Outline = true;
+            Glyph.Character = Item.DefaultMeleeWeaponGlyph(WeaponType);
+            Glyph.Color = Item.DefaultMaterialColors(Material);
         }
         public void Init(EquipmentSlot slot, ItemType type, int pctAB, int pctAR, int pctAE, int pctDB, int pctDR, int pctDE)
         {

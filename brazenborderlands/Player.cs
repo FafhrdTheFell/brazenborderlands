@@ -28,11 +28,10 @@ namespace brazenborderlands
             set { HealthBase = (value - HealthBase - BrawnBase - EgoBase / 2); } 
         }
 
-        public Player(int xcurrent, int ycurrent) : base(xcurrent, ycurrent, "[U+E400]", "turquoise")
+        public Player(int xcurrent, int ycurrent) : base(xcurrent, ycurrent, TileFinder.TileGridLookupUnicode(25, 2), "turquoise")
         {
-            // TileFinder.TileGridLookupUnicode(8, 1, TileFinder.TileSheet.Items);
             icon = TileFinder.TileGridLookup(25, 2);
-            //icon = TileFinder.TileGridLookup(1, 1, TileFinder.TileSheet.Items);
+            Glyph.Outline = true;
             InitByLevelNorm(1);
             Inventory = new Inventory();
 
@@ -132,7 +131,7 @@ namespace brazenborderlands
         private void UpdateGlyph()
         {
             string hex = icon.ToString("X");
-            this.DrawingGlyph = "[U+E" + hex + "]";
+            this.Glyph.Character = "[U+E" + hex + "]";
         }
     }
 }

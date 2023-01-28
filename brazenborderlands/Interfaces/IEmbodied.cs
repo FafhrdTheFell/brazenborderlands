@@ -6,11 +6,7 @@ namespace brazenborderlands
 {
     internal interface IEmbodied
     {
-        /// <summary>
-        /// DrawingGlyph is '[U+E' + [hexadecimal representation of tile]  + ']'.
-        /// </summary>
-        public string DrawingGlyph { get; set; }
-        public string DrawingColor { get; set; }
+        public Glyph Glyph { get; set; }
         int x { get; set; }
         int y { get; set; }
         bool IsWalkable { get; set; }

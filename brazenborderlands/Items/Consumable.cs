@@ -8,10 +8,6 @@ namespace brazenborderlands
 {
     internal class Consumable : Item, IConsumable
     {
-        private string _drawingGlyph;
-        private string _drawingColor;
-        public override string DrawingGlyph { get { return _drawingGlyph ?? Item.DefaultMiscGlyph(ConsumableType); } set { _drawingGlyph = value; } }
-        public override string DrawingColor { get { return _drawingColor ?? Item.DefaultUsageColors(Usage); } set { _drawingColor = value; } }
         public bool IsStackable { get; set; }
         public bool IsCharged { get; set; }
         public int NumUses { get; set; }
@@ -61,6 +57,9 @@ namespace brazenborderlands
             {
                 Name = "Scroll of Enlightenment";
             }
+            Glyph.Outline = true;
+            Glyph.Character = Item.DefaultMiscGlyph(ConsumableType);
+            Glyph.Color = Item.DefaultUsageColors(Usage);
         }
         public override int Rarity()
         {

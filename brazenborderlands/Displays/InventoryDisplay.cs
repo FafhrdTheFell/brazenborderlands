@@ -36,11 +36,11 @@ namespace brazenborderlands.Displays
             AddBorder = true;
             // spacing, letter, glyph, name, slot, description
             XTabs = new List<int> { 0,
-                (int)((float)EffectiveCellsWidth()*0.05),
-                (int)((float)EffectiveCellsWidth()*0.1),
-                (int)((float)EffectiveCellsWidth()*0.15),
+                (int)((float)EffectiveCellsWidth()*0.04),
+                (int)((float)EffectiveCellsWidth()*0.08),
+                (int)((float)EffectiveCellsWidth()*0.12),
                 (int)((float)EffectiveCellsWidth()*0.3),
-                (int)((float)EffectiveCellsWidth()*0.45)
+                (int)((float)EffectiveCellsWidth()*0.48)
             };
             UpdateInventoryList();
             Player = player;
@@ -61,12 +61,10 @@ namespace brazenborderlands.Displays
             }
             UpdateInventoryList();
             base.Draw();
-            for (int x = 0; x < CellsWidth; x+=2)
+            int listStart = 4;
+            for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
             {
-                for (int y = 0; y < CellsHeight; y+=2)
-                {
-                    //term.Print(x + XOffset, y + YOffset, "X");
-                }
+                Player.Inventory.Items[i].Glyph.DrawAt(GetXLocationForColumn(2),GetYLocationForRow(i + listStart), true, 0, -5);
             }
             Dirty = false;
             GlobalDirty = false;
@@ -103,19 +101,18 @@ namespace brazenborderlands.Displays
             int listStart = 4;
             for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
             {
-                Contents[1, i + listStart] = " ";
+                Contents[1, i + listStart] = "    ";
                 if (Mode != InventoryMode.None)
                 {
                     char c = (char)('a' + i);
                     if (Mode == InventoryMode.Equip && 
                         (Player.Inventory.Items[i] is Weapon ||
                         Player.Inventory.Items[i] is Armor))
-                        Contents[1, i + listStart] = c.ToString();
+                        Contents[1, i + listStart] = "  " + c.ToString();
                     if (Mode == InventoryMode.Use &&
                         Player.Inventory.Items[i] is Consumable)
-                        Contents[1, i + listStart] = c.ToString();
+                        Contents[1, i + listStart] = "  " + c.ToString();
                 }
-                Contents[2, i + listStart] = Player.Inventory.Items[i].DrawingGlyph;
                 Contents[3, i + listStart] = Player.Inventory.Items[i].NameString();
                 Contents[3, i + listStart] += Player.Inventory.Items[i].IsEquipped ?
                     " (" + Player.Inventory.Items[i].SlotString() + ")" : "                  ";

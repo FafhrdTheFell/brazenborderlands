@@ -34,8 +34,7 @@ namespace brazenborderlands
 
         public int x { get; set; }
         public int y { get; set; }
-        public virtual string DrawingGlyph { get; set; }
-        public virtual string DrawingColor { get; set; }
+        public virtual Glyph Glyph { get; set; }
         public bool IsWalkable { get => false; set { } }
         public bool IsTransparent { get => false; set { } }
         public string Name { get; set; }
@@ -59,13 +58,13 @@ namespace brazenborderlands
         public Actor()
         {
             Inventory = new Inventory();
+            Glyph = new Glyph();
         }
         public Actor(int xcurrent, int ycurrent, string drawingGlyph, string drawingColor)
         {
             x = xcurrent;
             y = ycurrent;
-            DrawingGlyph = drawingGlyph;
-            DrawingColor = drawingColor;
+            Glyph = new Glyph(drawingGlyph, drawingColor);
             Inventory = new Inventory();
         }
 

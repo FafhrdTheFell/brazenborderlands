@@ -47,12 +47,8 @@ namespace brazenborderlands
                     return "red";
             }
         }
-        private string _drawingGlyph;
-        private string _drawingColor;
         public MonsterKind Kind { get; set; }
         public override int SoakBase { get => LevelNorm(Level)/2; set { } }
-        public override string DrawingGlyph { get { return _drawingGlyph ?? DefaultMonsterTile(Kind); } set { _drawingGlyph = value; } }
-        public override string DrawingColor { get { return _drawingColor ?? DefaultMonsterColor(Kind); } set { _drawingColor = value; } }
         public Monster() { }
         public Monster(int level, MonsterKind monsterKind, params MonsterAttribute[] monsterAttributes)
         {
@@ -66,6 +62,9 @@ namespace brazenborderlands
                 InitEquipment();
             }
             Modify(monsterAttributes);
+            Glyph.Character = DefaultMonsterTile(Kind);
+            Glyph.Color = DefaultMonsterColor(Kind);
+            Glyph.Outline = true;
         }
         public void Modify(params MonsterAttribute[] monsterAttributes)
         {

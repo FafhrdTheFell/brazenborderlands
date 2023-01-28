@@ -97,6 +97,14 @@ namespace brazenborderlands
         {
             return y + YOffset + TabularBorderSpaces + Consts.YScaleGlyphs * (AddBorder ? 1 : 0);
         }
+        public int GetXLocationForColumn(int column)
+        {
+            return DisplayX(XTabs[column]);
+        }
+        public int GetYLocationForRow(int row)
+        {
+            return DisplayY(YTabs[row]);
+        }
         protected void RowsAutoSpacing()
         {
             YLines =  EffectiveCellsHeight() / Consts.YScaleText;

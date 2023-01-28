@@ -6,7 +6,7 @@ using term = BearLib.Terminal;
 
 namespace brazenborderlands
 {
-    // function naming convention: a Draw function calls term.Print one or more times to draw 
+    // function naming convention: a Draw function calls term. Print one or more times to draw 
     // Glyphs. A Glyph is a string defining a single logical tile (i.e., a 16x24 tile).
     internal class LocationDisplay : BorderedDisplay, IDisplayWindow
     {
@@ -121,7 +121,7 @@ namespace brazenborderlands
             DrawFurniture();
             DrawItems();
 
-            // drawing routines they rely on being able to determine when an object leaves
+            // drawing routines that rely on being able to determine when an object leaves
             // FOV must be above the following
             OldFOV = location.FOV.Clone();
 
@@ -173,7 +173,8 @@ namespace brazenborderlands
             {
                 if (location.FOV.IsInFov(a.x, a.y))
                 {
-                    DrawEmbodied(a, true, true);
+                    //DrawEmbodied(a, true, true);
+                    a.Glyph.DrawAt(DisplayX(a.x), DisplayY(a.y), true);
                 }
             }
             if (ActorStats)
@@ -194,25 +195,12 @@ namespace brazenborderlands
         {
             int currentLayer = termLayer();
             term.Layer(LayerFurnishings+1);
+            term.Layer(LayerFurnishings);
             foreach (Furnishing f in location.Furniture())
             {
                 if (location.Map.GetCell(f.x, f.y).IsExplored)
                 {
-                    if (!f.IsTransparent)
-                    {
-                        term.Layer(LayerFurnishings);
-                        term.Print(DisplayX(f.x), DisplayY(f.y), f.DrawingGlyphBack);
-                    }
-                    term.Layer(LayerFurnishings+1);
-                    if (location.FOV.IsInFov(f.x, f.y))
-                    {
-                        term.Print(DisplayX(f.x), DisplayY(f.y), EmbodiedTile(f));
-                    }
-                    else
-                    {
-                        term.Print(DisplayX(f.x), DisplayY(f.y), EmbodiedTile(f, "darker"));
-                    }
-                    
+                    f.Glyph.DrawAt(DisplayX(f.x), DisplayY(f.y), location.FOV.IsInFov(f.x, f.y));
                 }
             }
             term.Layer(currentLayer);
@@ -225,7 +213,7 @@ namespace brazenborderlands
             {
                 if (location.Map.GetCell(i.x, i.y).IsExplored)
                 {
-                    DrawEmbodied(i, true, location.FOV.IsInFov(i.x, i.y));
+                    i.Glyph.DrawAt(DisplayX(i.x), DisplayY(i.y), location.FOV.IsInFov(i.x, i.y));
                 }
             }
             term.Layer(currentLayer);
@@ -247,28 +235,6 @@ namespace brazenborderlands
             DrawFurniture();
             DrawItems();
             term.Layer(currentLayer);
-        }
-        private void DrawEmbodied(IEmbodied i, bool outlined, bool inFOV)
-        {
-            if (outlined)
-            {
-                term.Composition(true);
-                for (int dx = -1; dx <= 1; dx++)
-                {
-                    for (int dy = -1; dy <= 1; dy++)
-                    {
-                        string offset = "[offset=" + dx.ToString() + "," + dy.ToString() + "]";
-                        term.Print(DisplayX(i.x), DisplayY(i.y), offset + ColoredString(i.DrawingGlyph, "Black"));
-                    }
-                }
-            }
-            term.Print(DisplayX(i.x), DisplayY(i.y), EmbodiedTile(i, (inFOV ? "" : "darker")));
-            term.Composition(false);
-        }
-        public void DebugPrint(int x, int y, string s)
-        {
-            System.Console.WriteLine(" ({0}, {1}): {2}",x.ToString(),y.ToString(), s);
-            term.Print(x, y, s);
         }
         public string Statline(string statType)
         {
@@ -354,20 +320,8 @@ namespace brazenborderlands
             return true;
         }
 
-        private string EmbodiedTile(IEmbodied embodied)
-        {
-            return ColoredString(embodied.DrawingGlyph, embodied.DrawingColor);
-        }
-        private string EmbodiedTile(IEmbodied embodied, string tint)
-        {
-            return ColoredString(embodied.DrawingGlyph, embodied.DrawingColor, tint);
-        }
         // coloredstring: Bearlibterm may not handle extra spaces well between color= and
         // tint or color
-        private string ColoredString(string text, string color)
-        {
-            return "[color=" + color + "]" + text + "[/color]";
-        }
         private string ColoredString(string text, string color, string tint)
         {
             string tintstring = (tint == "" ? "" : tint + " ");

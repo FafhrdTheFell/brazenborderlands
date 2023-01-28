@@ -234,13 +234,15 @@ namespace brazenborderlands
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
         public virtual string Template { get; set; }
-        public virtual string DrawingGlyph { get; set; }
-        public virtual string DrawingColor { get; set; }
+        public virtual Glyph Glyph { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public bool IsWalkable { get => true; set { } }
         public bool IsTransparent { get => true; set { } }
-        public Item() { }
+        public Item() 
+        { 
+            Glyph = new Glyph();
+        }
         public Item Rebuild()
         {
             Item i = BuildFromTemplate(Template);
@@ -249,8 +251,7 @@ namespace brazenborderlands
             i.Type = Type;
             i.IsEquipped = IsEquipped;
             i.Template = Template;
-            i.DrawingColor = DrawingColor;
-            i.DrawingGlyph = DrawingGlyph;
+            i.Glyph = Glyph;
             i.x = x;
             i.y = y;
             return i;

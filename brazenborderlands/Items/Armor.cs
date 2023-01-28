@@ -12,10 +12,6 @@ namespace brazenborderlands
     {
         private string _name;
         private string _description;
-        private string _drawingGlyph;
-        private string _drawingColor;
-        public override string DrawingGlyph { get { return _drawingGlyph ?? Item.DefaultArmorGlyph(ArmorType); } set { _drawingGlyph = value; } }
-        public override string DrawingColor { get { return _drawingColor ?? Item.DefaultMaterialColors(Material); } set { _drawingColor = value; } }
         public int PctDefBrawn { get; set; }
         public int PctDefReflexes { get; set; }
         public int PctDefEgo { get; set; }
@@ -82,17 +78,9 @@ namespace brazenborderlands
                 case Material.Adamantine:
                     Modify(ItemAttribute.Solid, ItemAttribute.Solid); break;
             }
-        //    IronWood,
-        //Iron,
-        //Steel,
-        //Bronze,
-        //Elfmetal,
-        //Adamantine,
-        //Cuirbolli,
-        //Jazerant,
-        //Lamellar,
-        //Linothorax,
-        //Flexilon
+            Glyph.Outline = true;
+            Glyph.Character = Item.DefaultArmorGlyph(ArmorType);
+            Glyph.Color = Item.DefaultMaterialColors(Material);
         }
         public void Init(EquipmentSlot slot, ItemType type, int pctDB, int pctDR, int pctDE, int pctSE, int baseDef, int baseSoak)
         {

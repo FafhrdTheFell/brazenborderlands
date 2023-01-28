@@ -6,9 +6,7 @@ namespace brazenborderlands
 {
     internal class Furnishing : IEmbodied
     {
-        public string DrawingGlyph { get; set; }
-        public string DrawingColor { get; set; }
-        public string DrawingGlyphBack { get; set; }
+        public Glyph Glyph { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public virtual bool IsWalkable { get; set; }
@@ -18,7 +16,7 @@ namespace brazenborderlands
         public Furnishing() 
         {
             Name = "gizmo";
-            DrawingGlyphBack = TileFinder.AssembledTile(37, 9, "black");
+            Glyph = new Glyph();
         }
     }
 }

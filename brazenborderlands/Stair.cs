@@ -19,15 +19,18 @@ namespace brazenborderlands
             this.StairDown = down;
             if (down)
             {
-                DrawingGlyph = TileFinder.TileGridLookupUnicode(18, 2);
+                Glyph.Character = TileFinder.TileGridLookupUnicode(18, 2);
+                Glyph.BGCharacter = TileFinder.TileGridLookupUnicode(37, 9);
+                Glyph.BGColor = "black";
+                Glyph.Background = true;
                 Name = "stairs down";
             }
             else
             {
-                DrawingGlyph = TileFinder.TileGridLookupUnicode(18, 1);
-                Name = "stairs down";
+                Glyph.Character = TileFinder.TileGridLookupUnicode(18, 1);
+                Name = "stairs up";
             }
-            DrawingColor = "white";
+            Glyph.Color = "white";
         }
         public Stair() { }
     }
