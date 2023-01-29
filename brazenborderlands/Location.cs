@@ -132,7 +132,7 @@ namespace brazenborderlands
                 int x = Dice.Roll(xmin.ToString() + " + 1d" + spanx.ToString());
                 int y = Dice.Roll(ymin.ToString() + " + 1d" + spany.ToString());
                 Cell c = (Cell)Map.GetCell(x, y);
-                if (c.IsWalkable)
+                if (c.IsWalkable && GetActorAt(x,y) == null && GetItemAt(x, y) == null && GetStairsAt(x, y, true, true) == null)
                 {
                     return c;
                 }
@@ -351,6 +351,11 @@ namespace brazenborderlands
             return Monsters.SingleOrDefault(d => d.x == x && d.y == y);
         }
 
+        public Item GetItemAt(int x, int y)
+        {
+            return Items.SingleOrDefault(d => d.x == x && d.y == y);
+        }
+
         public Actor GetActorAt(int x, int y)
         {
             Actor a = Monsters.SingleOrDefault(d => d.x == x && d.y == y);
@@ -393,12 +398,11 @@ namespace brazenborderlands
 
         }
 
-        public Furnishing[] Furniture()
+        public List<Furnishing> Furniture()
         {
             Furnishing[] furnishings = Furnishings.ToArray();
             Furnishing[] stairs = Stairs.ToArray();
-            Furnishing[] all = furnishings.Concat(stairs).ToArray();
-            return all;
+            return furnishings.Concat(stairs).ToList<Furnishing>();
         }
 
     }
