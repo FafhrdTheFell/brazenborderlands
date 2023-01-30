@@ -370,6 +370,14 @@ namespace brazenborderlands
             return null;
         }
 
+        public void LookAt(int x, int y)
+        {
+            Monster m = GetMonsterAt(x, y);
+            string mText = (m != null ? "a " + m.Name + " (health " + m.Health + ")." : "");
+            Program.logDisplay.AppendEntry("You look at (" + x.ToString() + ", " + y.ToString() + ") and see ");
+            Program.logDisplay.AppendEntry(mText != "" ? mText : "nothing.");
+            Program.logDisplay.WriteBufferAsEntry();
+        }
         public void RemoveMonster(Monster monster)
         {
             if (monster == null)

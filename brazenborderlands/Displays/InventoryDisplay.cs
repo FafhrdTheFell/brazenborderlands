@@ -64,7 +64,7 @@ namespace brazenborderlands.Displays
             int listStart = 4;
             for (int i = 0; i < Math.Min(Player.Inventory.NumItems(), YLines - listStart); i++)
             {
-                Player.Inventory.Items[i].Glyph.DrawAt(GetXLocationForColumn(2),GetYLocationForRow(i + listStart), true, 0, -5);
+                Player.Inventory.Items[i].Glyph.DrawAt(GetXLocationForColumn(2),GetYLocationForRow(i + listStart), true, false, 0, -5);
             }
             Dirty = false;
             GlobalDirty = false;

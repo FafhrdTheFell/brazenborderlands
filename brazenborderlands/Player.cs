@@ -11,15 +11,27 @@ namespace brazenborderlands
 {
     internal class Player : Actor
     {
-        private int _icon;
+        public enum PlayerCommand
+        {
+            None,
+            Move,
+            Wait,
+            Ascend,
+            Descend,
+            GetItems,
+            Inventory,
+            Look,
+            MoveViewport,
+            Next,
+            Previous,
+            Select,
+            Exit,
+            QuitGame
+        }
 
         public string Class { get; set; }
         public string Species { get; set; }
 
-        public int icon { 
-            get => _icon; 
-            set { _icon = value; UpdateGlyph(); }
-        }
 
         // PC's add half of Ego to HP max
         public override int SoakBase { get => 40 * Brawn() / 100; set { } }
@@ -30,7 +42,6 @@ namespace brazenborderlands
 
         public Player(int xcurrent, int ycurrent) : base(xcurrent, ycurrent, TileFinder.TileGridLookupUnicode(25, 2), "turquoise")
         {
-            icon = TileFinder.TileGridLookup(25, 2);
             Glyph.Outline = true;
             InitByLevelNorm(1);
             Inventory = new Inventory();
@@ -43,95 +54,30 @@ namespace brazenborderlands
         public override bool Act()
         {
             bool acted = false;
-            int r = term.Read();
-            // shift does not work with numpad on my laptop...
-            bool shiftdown = (term.State(term.TK_SHIFT) == 1);
-            switch (r)
+            KeyPress keyPress = new KeyPress();
+            switch (keyPress.Command)
             {
-                case term.TK_ESCAPE:
+                case PlayerCommand.QuitGame:
                     Program.active = false; acted = true;  break;
-                case term.TK_W:
-                    Program.locationDisplay.ViewportMinY -= 5;  break;
-                case term.TK_S:
-                    Program.locationDisplay.ViewportMinY += 5; break;
-                case term.TK_A:
-                    Program.locationDisplay.ViewportMinX-= 5; break;
-                case term.TK_D:
-                    Program.locationDisplay.ViewportMinX+= 5; break;
-                case term.TK_KP_1:
-                    acted = Program.location.Move(this, -1, 1); break;
-                case term.TK_KP_2:
-                    acted = Program.location.Move(this, 0, 1); break;
-                case term.TK_KP_3:
-                    acted = Program.location.Move(this, 1, 1); break;
-                case term.TK_KP_4:
-                    acted = Program.location.Move(this, -1, 0); break;
-                case term.TK_KP_5:
-                    acted = true; break;
-                case term.TK_KP_6:
-                    acted = Program.location.Move(this, 1, 0); break;
-                case term.TK_KP_7:
-                    acted = Program.location.Move(this, -1, -1); break;
-                case term.TK_KP_8:
-                    acted = Program.location.Move(this, 0, -1); break;
-                case term.TK_KP_9:
-                    acted = Program.location.Move(this, 1, -1); break;
-                case term.TK_COMMA:
-                    if (shiftdown)
-                    {
-                        acted = Program.location.Ascend();
-                    }
-                    else
-                    {
-                        acted = Program.location.PickupItems(this);
-                    }
+                case PlayerCommand.MoveViewport:
+                    Program.locationDisplay.ViewportMinX += keyPress.moveDx;
+                    Program.locationDisplay.ViewportMinY += keyPress.moveDy;
                     break;
-                case term.TK_PERIOD:
-                    if (shiftdown)
-                    {
-                        acted = Program.location.Descend();
-                    }
-                    break;
-                case term.TK_F1:
-                    icon++;
-                    acted = true;
-                    break;
-                case term.TK_F2:
-                    icon--;
-                    acted = true;
-                    break;
-                case term.TK_I:
+                case PlayerCommand.Move:
+                    acted = Program.location.Move(this, keyPress.moveDx, keyPress.moveDy); break;
+                case PlayerCommand.Ascend:
+                    acted = Program.location.Ascend(); break;
+                case PlayerCommand.GetItems:
+                    acted = Program.location.PickupItems(this); break;
+                case PlayerCommand.Descend:
+                    acted = Program.location.Descend(); break;
+                case PlayerCommand.Inventory:
                     acted = Program.gameLoop.InventoryLoop(); break;
+                case PlayerCommand.Look:
+                    acted = Program.gameLoop.LookLoop(); break;
 
             }
             return acted;
-        }
-        //public override Weapon MeleeAttack()
-        //{
-        //    return Inventory.EquippedWeapon() ?? new Weapon(MeleeWeaponType.Fist);
-        //}
-        //public override int Defense()
-        //{
-        //    int def = Reflexes();
-        //    foreach(Armor a in Inventory.EquippedArmors())
-        //    {
-        //        def += a.DefenseChange(this);
-        //    }
-        //    return def;
-        //}
-        //public override int Soak()
-        //{
-        //    int soak = Inventory.IsBodyArmorEquipped() ? 0 : 40 * Brawn() / 100;
-        //    foreach (Armor a in Inventory.EquippedArmors())
-        //    {
-        //        soak += a.SoakChange(this);
-        //    }
-        //    return soak;
-        //}
-        private void UpdateGlyph()
-        {
-            string hex = icon.ToString("X");
-            this.Glyph.Character = "[U+E" + hex + "]";
         }
     }
 }

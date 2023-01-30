@@ -73,8 +73,7 @@ namespace brazenborderlands
             player = new Player(0, 0);
             location = new Location(Consts.MapWidth, Consts.MapHeight, true, 1, 0, 0);
             locationDisplay = new LocationDisplay(Consts.LocationDisplayWidth, Consts.TermHeightBlocks, 0, 0, location);
-            //characterDisplay = new BorderedDisplay(Consts.TermWidthBlocks - Consts.LocationDisplayWidth - 2, Consts.CharacterDisplayHeight,
-            //   Consts.LocationDisplayWidth + 1, 0);
+
             characterDisplay = new PlayerDisplay(Consts.TermWidthBlocks - Consts.LocationDisplayWidth - 2, Consts.CharacterDisplayHeight,
                 Consts.LocationDisplayWidth + 1, 0);
             logDisplay = new LogDisplay(Consts.TermWidthBlocks - Consts.LocationDisplayWidth - 2, Consts.TermHeightBlocks - Consts.CharacterDisplayHeight,

@@ -1,5 +1,6 @@
 ﻿using RogueSharp;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Printing;
 using term = BearLib.Terminal;
 
@@ -55,6 +56,8 @@ namespace brazenborderlands
 
         private FieldOfView OldFOV;
 
+        public List<ICell> HighlightCells { get; set; }
+
        public LocationDisplay(int cellsWidth, int cellsHeight, int cellsXOffset, int cellsYOffset, Location startlocation) :
             base(cellsWidth, cellsHeight, cellsXOffset, cellsYOffset) {
             AddBorder = false;
@@ -72,6 +75,8 @@ namespace brazenborderlands
             ViewportAdjustment = (TilesHeight + TilesWidth) / 5;
             ViewpointXBorder = TilesWidth / 8;
             ViewpointYBorder = TilesHeight / 8;
+
+            HighlightCells = new List<ICell>();
 
             Dirty = true;
             GlobalDirty = false;
@@ -114,7 +119,8 @@ namespace brazenborderlands
                 {
                     if (location.FOV.IsInFov(x, y) || OldFOV.IsInFov(x, y))
                     {
-                        location.Glyphs[x,y].DrawAt(DisplayX(x),DisplayY(y), location.FOV.IsInFov(x, y));
+                        bool highlight = HighlightCells.Exists(c => c.X == x && c.Y == y);
+                        location.Glyphs[x,y].DrawAt(DisplayX(x),DisplayY(y), location.FOV.IsInFov(x, y), highlight);
                     }
                 }
             }
@@ -173,8 +179,8 @@ namespace brazenborderlands
             {
                 if (location.FOV.IsInFov(a.x, a.y))
                 {
-                    //DrawEmbodied(a, true, true);
-                    a.Glyph.DrawAt(DisplayX(a.x), DisplayY(a.y), true);
+                    bool highlight = HighlightCells.Exists(c => c.X == a.x && c.Y == a.y);
+                    a.Glyph.DrawAt(DisplayX(a.x), DisplayY(a.y), true, highlight);
                 }
             }
             if (ActorStats)
@@ -200,7 +206,8 @@ namespace brazenborderlands
             {
                 if (location.Map.GetCell(f.x, f.y).IsExplored)
                 {
-                    f.Glyph.DrawAt(DisplayX(f.x), DisplayY(f.y), location.FOV.IsInFov(f.x, f.y));
+                    bool highlight = HighlightCells.Exists(c => c.X == f.x && c.Y == f.y);
+                    f.Glyph.DrawAt(DisplayX(f.x), DisplayY(f.y), location.FOV.IsInFov(f.x, f.y), highlight);
                 }
             }
             term.Layer(currentLayer);
@@ -213,7 +220,8 @@ namespace brazenborderlands
             {
                 if (location.Map.GetCell(i.x, i.y).IsExplored)
                 {
-                    i.Glyph.DrawAt(DisplayX(i.x), DisplayY(i.y), location.FOV.IsInFov(i.x, i.y));
+                    bool highlight = HighlightCells.Exists(c => c.X == i.x && c.Y == i.y);
+                    i.Glyph.DrawAt(DisplayX(i.x), DisplayY(i.y), location.FOV.IsInFov(i.x, i.y), highlight);
                 }
             }
             term.Layer(currentLayer);
@@ -229,7 +237,8 @@ namespace brazenborderlands
                     ICell c = location.Map.GetCell(x, y);
                     if (!c.IsExplored)
                     { continue; }
-                    location.Glyphs[x, y].DrawAt(DisplayX(x), DisplayY(y), location.FOV.IsInFov(x, y));
+                    bool highlight = HighlightCells.Exists(h => h.X == c.X && h.Y == c.X);
+                    location.Glyphs[x, y].DrawAt(DisplayX(x), DisplayY(y), location.FOV.IsInFov(x, y), highlight);
                 }
             }
             DrawFurniture();
@@ -241,11 +250,6 @@ namespace brazenborderlands
             if (statType == "location")
             {
                 return Program.location.OvermapLocation.Depth.ToString() + ": " + Program.player.x.ToString() + ", " + Program.player.y.ToString();
-            }
-            if (statType == "tile")
-            {
-                string hex = Program.player.icon.ToString("X");
-                return Program.player.icon.ToString() + " / " + hex;
             }
             return "XXXXX";
         }
